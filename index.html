@@ -287,7 +287,6 @@ html,body{background:var(--ub-bg)!important}
       <nav class="udb-nav">
         <button class="tab-btn on" data-tab="contas"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v11h14V9"/></svg> Contas</button>
         <button class="tab-btn" data-tab="cbo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg> Campanhas (CBO)</button>
-        <button class="tab-btn" data-tab="abo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Conjuntos (ABO)</button>
         <button class="tab-btn" data-tab="orc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Or&ccedil;amento</button>
         <button class="tab-btn" data-tab="hist"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> Hist&#243;rico</button>
       </nav>
@@ -3020,7 +3019,7 @@ html,body{background:var(--ub-bg)!important}
       var clicksNum = camp._linkClicks>0 ? camp._linkClicks.toLocaleString('pt-BR') : '---';
       var idTxt = '<span style="color:var(--ub-mut);font-size:11px">'+camp.id+'</span>';
       var bl = 'border-left:1px solid var(--ub-line)';
-      return '<tr data-cbo="'+i+'" data-status="'+st.group+'" data-error="'+(st.isError?'1':'')+'" data-name="'+camp.name.toLowerCase().replace(/"/g,'&quot;')+'">' +
+      return '<tr data-cbo="'+i+'" data-status="'+st.group+'" data-error="'+(st.isError?'1':'')+'" data-acct="'+String(camp._acctId||'').replace(/"/g,'')+'" data-name="'+camp.name.toLowerCase().replace(/"/g,'&quot;')+'">' +
         /* 1 Status (checkbox + badge + toggle) */
         '<td><div style="display:flex;align-items:flex-start;gap:7px"><input type="checkbox" class="cbo-sel" data-i="'+i+'" title="Selecionar campanha" style="width:16px;height:16px;accent-color:var(--ub-blue);margin-top:2px;cursor:pointer;flex:0 0 auto"><div>'+stBadge+(st.note?'<div style="font-size:10px;color:'+(st.noteCls==='ok'?'#57606a':(st.noteCls==='warn'?'#9a6700':'#cf222e'))+';margin-top:2px;white-space:nowrap">'+st.note+'</div>':'')+'<div style="margin-top:5px"><button class="tgl-btn '+(((camp.status||"").toUpperCase()==="ACTIVE")?"tgl-on":"tgl-off")+'" id="ctgl_'+i+'">'+(((camp.status||"").toUpperCase()==="ACTIVE")?"⏸ Pausar":"▶ Ativar")+'</button></div></div></div></td>' +
         /* 2 Campanha */
@@ -3096,6 +3095,7 @@ html,body{background:var(--ub-bg)!important}
     /* Linha de TOTAIS — soma SO as campanhas do filtro atual (applyCboFilters recalcula). */
     document.getElementById('cboTbody').innerHTML = rowsHtml + cboTotalsHtml(cboData);
     renderCboMetrics(cboData);
+    populateCboAccts(cboData);
     if (window._updateCboSelBar) window._updateCboSelBar();
     cboData.forEach(function(camp, i) {
       var inp = document.getElementById('cdaily_'+i);
@@ -3163,6 +3163,19 @@ html,body{background:var(--ub-bg)!important}
       card('IC', hasC?(T.ics+' <span style="font-size:15px;color:var(--ub-green-d);font-weight:700">· CC '+cc.toFixed(1).replace('.',',')+'%</span>'):'---', 'CPI '+cpi+' · CC = Vendas ÷ IC');
   }
 
+  /* Popula o dropdown "Conta de Anúncio" com as contas presentes nas campanhas carregadas. */
+  function populateCboAccts(list) {
+    var sel = document.getElementById('cboAcctSel'); if (!sel) return;
+    var prev = sel.value;
+    var seen = {}, opts = [];
+    (list || []).forEach(function(c){ var id = String(c._acctId || ''); if (id && !seen[id]) { seen[id] = 1; opts.push({ id:id, name:c._accountName || id }); } });
+    opts.sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+    var html = '<option value="">Qualquer</option>';
+    opts.forEach(function(o){ html += '<option value="'+o.id.replace(/"/g,'')+'">'+(o.name||o.id).replace(/</g,'&lt;')+'</option>'; });
+    sel.innerHTML = html;
+    if (prev && seen[prev]) sel.value = prev;
+  }
+
   /* Linha de TOTAIS da aba CBO. Soma SO a lista passada -> respeita o filtro (Ativas/Pausadas/busca...). */
   function cboTotalsHtml(list) {
     var hasC = hasConv();
@@ -3221,19 +3234,22 @@ html,body{background:var(--ub-bg)!important}
   function applyCboFilters() {
     var srchEl = document.getElementById('cboSrch');
     var q = srchEl ? srchEl.value.toLowerCase().trim() : '';
+    var accSel = document.getElementById('cboAcctSel');
+    var accVal = accSel ? accSel.value : '';
     var vis = [];
     document.querySelectorAll('#cboTbody tr[data-name]').forEach(function(tr) {
       var nm = tr.getAttribute('data-name') || '';
       var st = tr.getAttribute('data-status') || '';
       var err = tr.getAttribute('data-error') === '1';
       var okName = !q || nm.indexOf(q) >= 0;
+      var okAcct = !accVal || (tr.getAttribute('data-acct') === accVal);
       var okStatus;
       if (cboStatus === 'all') okStatus = true;
       else if (cboStatus === 'error') okStatus = err;
       else if (cboStatus === 'teste') okStatus = nm.indexOf('teste') >= 0;
       else if (cboStatus === 'abo') okStatus = nm.indexOf('abo') >= 0;
       else okStatus = (st === cboStatus);
-      var ok = okName && okStatus;
+      var ok = okName && okStatus && okAcct;
       tr.style.display = ok ? '' : 'none';
       if (ok) { var idx = parseInt(tr.getAttribute('data-cbo')); if (!isNaN(idx) && cboData[idx]) vis.push(cboData[idx]); }
     });
@@ -4609,6 +4625,8 @@ html,body{background:var(--ub-bg)!important}
   if (cboStatusSel) cboStatusSel.addEventListener('change', function(){ var p = document.querySelector('#mdb [data-cbostatus="'+this.value+'"]'); if (p) p.click(); });
   var cboPeriodSel = document.getElementById('cboPeriodSel');
   if (cboPeriodSel) cboPeriodSel.addEventListener('change', function(){ var p = document.querySelector('#mdb [data-period="'+this.value+'"]'); if (p) p.click(); });
+  var cboAcctSelEl = document.getElementById('cboAcctSel');
+  if (cboAcctSelEl) cboAcctSelEl.addEventListener('change', function(){ applyCboFilters(); });
   var applyRangeBtn = document.getElementById('cboApplyRange');
   if (applyRangeBtn) applyRangeBtn.addEventListener('click', function() {
     var f = (document.getElementById('cboFrom')||{}).value, t = (document.getElementById('cboTo')||{}).value;
