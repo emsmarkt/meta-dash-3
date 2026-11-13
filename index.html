@@ -6,6 +6,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#005AE3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Meta Dash">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>html,body{background:#ffffff!important;margin:0;padding:0}*{box-sizing:border-box;margin:0;padding:0}#mdb{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#ffffff;min-height:100vh;color:#1f2328;padding:20px 28px;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;width:100vw;overflow-x:hidden}#mdb .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 0 18px;border-bottom:1px solid #e4e8ee;margin-bottom:20px;flex-wrap:wrap;gap:10px}#mdb .hdr h1{font-size:20px;font-weight:600;color:#0d1117;display:flex;align-items:center;gap:10px}#mdb .dot{width:9px;height:9px;background:#1a7f37;border-radius:50%;animation:mdPulse 2s infinite;flex-shrink:0}@keyframes mdPulse{0%,100%{opacity:1}50%{opacity:.4}}#mdb .hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#mdb .ts{font-size:12px;color:#656d76}#mdb .tabs{display:flex;gap:3px;background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:4px}#mdb .tab-btn{background:transparent;border:none;border-radius:6px;padding:7px 18px;font-size:13px;color:#57606a;cursor:pointer;font-family:inherit;white-space:nowrap}#mdb .tab-btn.on{background:#e4e8ee;color:#0d1117}#mdb .tab-pane{display:none}#mdb .tab-pane.show{display:block}#mdb .btn{background:#e4e8ee;border:1px solid #d0d7de;border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;color:#1f2328;display:inline-flex;align-items:center;gap:6px;font-family:inherit}#mdb .btn:hover{background:#d0d7de;color:#0d1117}#mdb .btn-blue{background:#0969da;border-color:#0969da;color:#fff}#mdb .btn-blue:hover{background:#0969da}#mdb .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}#mdb .mc{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:14px 16px}#mdb .mc-l{font-size:12px;color:#57606a;margin-bottom:5px}#mdb .mc-v{font-size:26px;font-weight:600;color:#0d1117}#mdb .mc-s{font-size:12px;color:#656d76;margin-top:3px}#mdb .filters{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}#mdb .pill{font-size:12.5px;padding:5px 12px;border-radius:20px;border:1px solid #d0d7de;cursor:pointer;color:#57606a;background:transparent;white-space:nowrap;font-family:inherit;user-select:none}#mdb .pill.on{background:#e4e8ee;color:#0d1117;border-color:#0969da}#mdb .srch{flex:1;min-width:140px;max-width:220px;background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;padding:6px 11px;font-size:13px;color:#1f2328;outline:none;font-family:inherit}#mdb .srch:focus{border-color:#0969da}#mdb .tbl-wrap{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;overflow:auto;max-height:64vh}#mdb table{width:100%;border-collapse:collapse;font-size:13px}#mdb th{font-weight:500;color:#57606a;font-size:12px;padding:10px 14px;border-bottom:1px solid #e4e8ee;text-align:left;white-space:nowrap;background:#f6f8fa;position:sticky;top:0;z-index:1}#mdb td{padding:9px 14px;border-bottom:1px solid #e4e8ee;white-space:nowrap;color:#1f2328;vertical-align:middle}#mdb tr:last-child td{border-bottom:none}#mdb tr:hover td{background:#eef1f5}#mdb .badge{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px}#mdb .b-gr{background:rgba(63,185,80,.15);color:#1a7f37}#mdb .b-r{background:rgba(248,81,73,.15);color:#cf222e}#mdb .b-a{background:rgba(210,153,34,.15);color:#9a6700}#mdb .b-gy{background:rgba(110,118,129,.15);color:#57606a}#mdb .b-bl{background:rgba(56,139,253,.15);color:#0969da}#mdb .b-p{background:rgba(188,140,255,.15);color:#8250df}#mdb .b-o{background:rgba(255,123,114,.15);color:#cf222e}#mdb .ld{text-align:center;padding:44px;color:#656d76;font-size:14px}#mdb .spin{display:inline-block;width:15px;height:15px;border:2px solid #d0d7de;border-top-color:#0969da;border-radius:50%;animation:mdSpin .8s linear infinite;vertical-align:-3px;margin-right:6px}@keyframes mdSpin{to{transform:rotate(360deg)}}#mdb .alert-box{background:rgba(248,81,73,.1);border-left:3px solid #cf222e;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;color:#cf222e;margin-bottom:14px}#mdb .setup-box{background:#f6f8fa;border:1px solid #d0d7de;border-radius:10px;padding:32px;max-width:500px;margin:48px auto;text-align:center}#mdb .setup-box h2{color:#0d1117;font-size:17px;margin-bottom:10px}#mdb .setup-box p{color:#57606a;font-size:13px;margin-bottom:20px;line-height:1.6}#mdb .setup-inp{width:100%;background:#ffffff;border:1px solid #d0d7de;border-radius:6px;padding:11px 13px;font-size:13px;color:#1f2328;outline:none;font-family:monospace;margin-bottom:12px}#mdb .setup-inp:focus{border-color:#0969da}#mdb .cbo-info{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:13px;color:#57606a;line-height:1.7}#mdb .cbo-info strong{color:#0d1117}#mdb .cbo-inp{width:100px;background:#ffffff;border:1px solid #d0d7de;border-radius:5px;padding:6px 8px;font-size:13px;color:#1f2328;text-align:right;font-family:inherit}#mdb .cbo-inp:focus{outline:none;border-color:#0969da}#mdb .cbo-date{background:#ffffff;border:1px solid #d0d7de;border-radius:5px;padding:6px 8px;font-size:12px;color:#1f2328;font-family:inherit;cursor:pointer;width:136px}#mdb .cbo-date:focus{outline:none;border-color:#0969da}#mdb .save-btn{background:#0969da;border:1px solid #0969da;border-radius:5px;padding:6px 12px;font-size:12px;color:#fff;cursor:pointer;font-family:inherit;white-space:nowrap}#mdb .save-btn:hover{background:#0969da}#mdb .save-btn:disabled{background:#e4e8ee;border-color:#d0d7de;color:#656d76;cursor:not-allowed}#mdb .d-good{color:#1a7f37;font-weight:600;font-size:13px}#mdb .d-warn{color:#9a6700;font-weight:600;font-size:13px}#mdb .d-bad{color:#cf222e;font-weight:600;font-size:13px}#mdb .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;display:none;align-items:center;justify-content:center}#mdb .modal-bg.show{display:flex}#mdb .modal{background:#f6f8fa;border:1px solid #d0d7de;border-radius:10px;padding:22px;min-width:320px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto}#mdb .modal h2{font-size:15px;font-weight:600;color:#0d1117;margin-bottom:8px}#mdb .modal p{font-size:12px;color:#57606a;margin-bottom:14px;line-height:1.5}#mdb .modal h3{font-size:13px;color:#57606a;margin:16px 0 8px;border-top:1px solid #e4e8ee;padding-top:12px}#mdb .tk-row{display:flex;align-items:center;gap:7px;margin-bottom:9px}#mdb .tk-inp{flex:1;background:#ffffff;border:1px solid #d0d7de;border-radius:6px;padding:7px 10px;font-size:12px;color:#1f2328;outline:none;font-family:monospace}#mdb .tk-inp:focus{border-color:#0969da}#mdb .tk-rm{background:none;border:none;color:#cf222e;cursor:pointer;font-size:17px;line-height:1;padding:0 4px}#mdb .mfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}#mdb .foot-note{margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:#656d76;flex-wrap:wrap;gap:4px}#mdb .th-group{background:#ffffff;font-size:10px;color:#656d76;text-transform:uppercase;letter-spacing:.5px}#mdb .period-bar{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 #mdb .tgl-btn{border:none;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 #mdb .tgl-btn.tgl-on{background:rgba(248,81,73,.15);color:#cf222e}
@@ -285,10 +292,12 @@ html,body{background:var(--ub-bg)!important}
       <div class="udb-dash"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> T2 Emerson — (UTC-3) <svg class="cx" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
       <div class="udb-sec">Menu</div>
       <nav class="udb-nav">
-        <button class="tab-btn on" data-tab="contas"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v11h14V9"/></svg> Contas</button>
+        <button class="tab-btn on" data-tab="resumo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard</button>
+        <button class="tab-btn" data-tab="contas"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v11h14V9"/></svg> Contas</button>
         <button class="tab-btn" data-tab="cbo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg> Campanhas (CBO)</button>
         <button class="tab-btn" data-tab="orc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Or&ccedil;amento</button>
         <button class="tab-btn" data-tab="hist"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> Hist&#243;rico</button>
+        <button class="tab-btn" data-tab="notif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg> Notifica&#231;&#245;es <span class="bdg" id="notifBadge" style="display:none">0</span></button>
       </nav>
       <div class="udb-sbfoot">
         <button class="btn" id="btnTokens"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-2.7.6 1.6 1.6 0 01-3.2 0 1.6 1.6 0 00-2.7-.6l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00-.6-2.7 1.6 1.6 0 010-3.2 1.6 1.6 0 00.6-2.7l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3 1.6 1.6 0 001-1.5 1.6 1.6 0 013.2 0 1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8 1.6 1.6 0 001.5 1 1.6 1.6 0 010 3.2 1.6 1.6 0 00-1.5 1z"/></svg> Tokens &amp; Config</button>
@@ -308,16 +317,47 @@ html,body{background:var(--ub-bg)!important}
       </header>
       <div class="udb-content">
         <div id="alertBox" class="alert-box" style="display:none"></div>
-  <div class="tab-pane show" id="tab-contas">
+  <div class="tab-pane show" id="tab-resumo">
+    <div class="udb-panelhd" style="margin-bottom:14px">
+      <h2 class="udb-h2" style="font-size:19px">Vis&atilde;o geral</h2>
+      <span class="udb-badge" id="resumoPeriodBadge" style="background:#eef3ff;color:var(--ub-blue);border-color:#d4e2ff">Hoje</span>
+      <div class="udb-tb">
+        <select class="ctrl udb-ctrl" id="resumoPeriodSel" style="width:auto;min-width:150px"><option value="today">Hoje</option><option value="yesterday">Ontem</option><option value="custom">Personalizado</option></select>
+        <button class="btn btn-blue" id="btnLoadResumo"><span id="spinResumo" class="spin" style="display:none"></span>&#8635; Atualizar</button>
+      </div>
+    </div>
+    <div id="resumoCustomRange" style="display:none;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--ub-ink2)">De</span>
+      <input type="date" id="resumoFrom" class="cbo-date" style="width:150px">
+      <span style="color:#656d76;font-size:12px">at&eacute;</span>
+      <input type="date" id="resumoTo" class="cbo-date" style="width:150px">
+      <button class="save-btn" id="resumoApplyRange">Aplicar per&iacute;odo</button>
+    </div>
+    <div class="metrics" id="resumoMetrics"></div>
+    <div class="card udb-panel" style="margin-top:16px">
+      <div class="udb-panelhd" style="margin-bottom:12px"><h2 class="udb-h2" style="font-size:16px">Contas</h2><span class="udb-badge" id="resumoAcctBadge" style="background:#f3f2f7;color:var(--ub-ink2);border-color:var(--ub-line)">&mdash;</span></div>
+      <div class="metrics" id="resumoAccts" style="margin-bottom:0"></div>
+    </div>
+    <div class="card udb-panel" style="margin-top:16px">
+      <div class="udb-panelhd" style="margin-bottom:10px"><h2 class="udb-h2" style="font-size:16px">Top campanhas &middot; por lucro</h2><span class="udb-badge" style="background:#eafaf0;color:var(--ub-green-d);border-color:#c8efd8">&#128200; no per&iacute;odo</span></div>
+      <div class="tbl-wrap" style="box-shadow:none;border:none">
+        <table>
+          <thead><tr><th>Campanha</th><th>Conta</th><th>Gasto</th><th>Vendas</th><th>Faturamento</th><th>Lucro</th><th>ROAS</th></tr></thead>
+          <tbody id="resumoTopBody"><tr><td colspan="7" class="ld">Sem dados ainda.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane" id="tab-contas">
     <div id="mainContent"><div class="ld"><span class="spin"></span>Iniciando...</div></div>
   </div>
   <div class="tab-pane" id="tab-cbo">
     <div id="rtDiag" style="display:none;background:#f6f8fa;border:1px solid #d0d7de;border-left:3px solid #0969da;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#57606a;font-family:monospace;word-break:break-word"></div>
     <!-- Pills OCULTOS: continuam dirigindo a lógica (período/status); a UI usa os dropdowns abaixo -->
     <div id="cboPillsHidden" style="display:none">
-      <button class="pill" data-period="today" id="pHoje">Hoje</button>
+      <button class="pill on" data-period="today" id="pHoje">Hoje</button>
       <button class="pill" data-period="yesterday" id="pOntem">Ontem</button>
-      <button class="pill on" data-period="last_7d" id="p7d">7 dias</button>
+      <button class="pill" data-period="last_7d" id="p7d">7 dias</button>
       <button class="pill" data-period="last_30d" id="p30d">30 dias</button>
       <button class="pill" data-period="lifetime" id="pMax">Maximo</button>
       <button class="pill" data-period="custom" id="pCustom">Personalizado</button>
@@ -344,7 +384,7 @@ html,body{background:var(--ub-bg)!important}
       <div class="udb-filters">
         <div class="udb-fg"><label>Nome da Campanha</label><input class="ctrl udb-ctrl" id="cboSrch" type="text" placeholder="Filtrar por nome"></div>
         <div class="udb-fg"><label>Status da Campanha</label><select class="ctrl udb-ctrl" id="cboStatusSel"><option value="all">Qualquer</option><option value="active">Ativo</option><option value="paused">Pausado</option><option value="error">Com erro</option><option value="teste">TESTE</option></select></div>
-        <div class="udb-fg"><label>Período de Visualização</label><select class="ctrl udb-ctrl" id="cboPeriodSel"><option value="today">Hoje</option><option value="yesterday">Ontem</option><option value="last_7d" selected>Últimos 7 dias</option><option value="last_30d">Últimos 30 dias</option><option value="lifetime">Máximo</option><option value="custom">Personalizado</option></select></div>
+        <div class="udb-fg"><label>Período de Visualização</label><select class="ctrl udb-ctrl" id="cboPeriodSel"><option value="today" selected>Hoje</option><option value="yesterday">Ontem</option><option value="last_7d">Últimos 7 dias</option><option value="last_30d">Últimos 30 dias</option><option value="lifetime">Máximo</option><option value="custom">Personalizado</option></select></div>
         <div class="udb-fg"><label>Conta de Anúncio</label><select class="ctrl udb-ctrl" id="cboAcctSel"><option value="">Qualquer</option></select></div>
         <div class="udb-fg"><label>Produto</label><select class="ctrl udb-ctrl" id="cboProdSel"><option value="">Qualquer</option></select></div>
       </div>
@@ -480,6 +520,23 @@ html,body{background:var(--ub-bg)!important}
     </div>
     <div id="orcBody"></div>
   </div>
+  <div class="tab-pane" id="tab-notif">
+    <div class="card udb-panel" style="margin-bottom:16px">
+      <div class="udb-panelhd" style="margin-bottom:12px"><h2 class="udb-h2">&#128276; Notifica&#231;&#245;es de venda</h2></div>
+      <p style="font-size:13px;color:var(--ub-ink2);margin-bottom:14px;line-height:1.55">Receba um aviso <b>toda vez que cai uma venda</b> (JVZoo, Cartpanda, Digistore). Com <b>som de caixa</b> &#128176; quando o painel est&#225; aberto e, depois de instalar como app, <b>notifica&#231;&#227;o no celular</b>.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-blue" id="notifEnable">&#128276; Ativar notifica&#231;&#245;es</button>
+        <button class="btn" id="notifTest">&#128266; Testar som</button>
+        <button class="btn" id="notifClear">Limpar lista</button>
+        <span id="notifStatus" style="font-size:12.5px;color:var(--ub-mut)"></span>
+      </div>
+      <div id="notifInstallHint" style="display:none;margin-top:12px;font-size:12.5px;color:#8a5a00;background:var(--ub-amber-soft);border:1px solid #ffd9a8;border-radius:10px;padding:10px 14px;line-height:1.5"></div>
+    </div>
+    <div class="card udb-panel">
+      <div class="udb-panelhd" style="margin-bottom:10px"><h2 class="udb-h2" style="font-size:16px">&#250;ltimas vendas</h2></div>
+      <div id="notifList"></div>
+    </div>
+  </div>
   <div class="foot-note">
     <span>Meta Graph API v21.0 &mdash; dados em tempo real</span>
     <span id="lastUpd"></span>
@@ -564,8 +621,8 @@ html,body{background:var(--ub-bg)!important}
   var utmData = {};
   var curF = 'all';
   var curAcctF = 'all';
-  var curTab = 'contas';
-  var cboPeriod = 'last_7d';
+  var curTab = 'resumo';
+  var cboPeriod = 'today';
   var cboCustomFrom = '', cboCustomTo = '';
   var cboStatus = 'all';
   var aboData = [];
@@ -1745,7 +1802,7 @@ html,body{background:var(--ub-bg)!important}
         var sp = 0; try { sp = (a.insights && a.insights.data && a.insights.data[0]) ? (parseFloat(a.insights.data[0].spend) || 0) : 0; } catch(e){}
         a._sp7d = sp; return (sp > 0 || a.account_status === 1) && acctAllowed(a); /* conta c/ gasto 7d OU ATIVA (p/ pegar campanha ativa de conta nova/parada que não gastou ainda) */
       });
-      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; return; }
+      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; return; }
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
       var camps = [];
       var idx = 0;
@@ -1798,6 +1855,7 @@ html,body{background:var(--ub-bg)!important}
     }).catch(function(e) {
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
       if (spinEl) spinEl.style.display='none';
+      var _s2=document.getElementById('spinResumo'); if(_s2)_s2.style.display='none';
     });
   }
 
@@ -1805,6 +1863,7 @@ html,body{background:var(--ub-bg)!important}
     if (!camps.length) {
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
       var spinEl = document.getElementById('spinCBO'); if (spinEl) spinEl.style.display='none';
+      var _s3=document.getElementById('spinResumo'); if(_s3)_s3.style.display='none';
       return Promise.resolve();
     }
     var isLifetime = (cboPeriod === 'lifetime');
@@ -3136,6 +3195,81 @@ html,body{background:var(--ub-bg)!important}
     bindSaleTips();
     /* (Barra de diagnostico do RedTrack/Humor removida da tela a pedido.) */
     applyCboFilters();
+    var spR = document.getElementById('spinResumo'); if (spR) spR.style.display = 'none';
+    renderResumo();
+  }
+
+  /* ===== DASHBOARD (Resumo / Visão geral) ===== reaproveita cboData + allData, SEM chamada Meta extra. */
+  function renderResumo() {
+    var badge = document.getElementById('resumoPeriodBadge'); if (badge) badge.textContent = periodLabel();
+    var mEl = document.getElementById('resumoMetrics');
+    if (!mEl) return;
+    var hasC = hasConv();
+    /* --- Cards principais: soma TODAS as campanhas carregadas (não respeita filtro da aba CBO) --- */
+    if (!cboData.length) {
+      var noTk = !(getTks() && getTks().length);
+      mEl.innerHTML = '<div class="card udb-panel" style="grid-column:1/-1;text-align:center;padding:30px 20px">'
+        + '<div style="font-size:14px;color:var(--ub-ink2);margin-bottom:14px">'
+        + (noTk ? 'Configure um <b>token</b> em &#9881; Tokens para ver o resumo.' : 'Clique em <b>Atualizar</b> para carregar faturamento, gasto, lucro, vendas e IC.')
+        + '</div>'
+        + (noTk ? '' : '<button class="btn btn-blue" id="btnLoadResumo2">&#8635; Carregar dados</button>')
+        + '</div>';
+      var b2 = document.getElementById('btnLoadResumo2'); if (b2) b2.addEventListener('click', function(){ loadCBO(); });
+      document.getElementById('resumoTopBody').innerHTML = '<tr><td colspan="7" class="ld">Sem dados ainda.</td></tr>';
+    } else {
+      var T = { sp:0, fat:0, lucro:0, sales:0, ics:0 };
+      cboData.forEach(function(c){
+        var ps = c._periodSpend || 0; T.sp += ps;
+        var sv = (hasC && c._conv) ? (c._conv.sales||0) : 0, iv = (hasC && c._conv) ? (c._conv.ic||0) : 0;
+        T.sales += sv; T.ics += iv; var fv = campFat(c); T.fat += fv; T.lucro += (fv - ps);
+      });
+      var roas = T.sp>0 ? T.fat/T.sp : 0, marg = T.fat>0 ? (T.lucro/T.fat*100) : 0;
+      var cpa = T.sales>0 ? fmtUSD(T.sp/T.sales) : '---', cpi = T.ics>0 ? fmtUSD(T.sp/T.ics) : '---';
+      var cc = T.ics>0 ? (T.sales/T.ics*100) : 0;
+      var roasCls = roas>=1.5 ? 'd-good' : (roas>=1.3 ? 'd-warn' : (roas>0?'d-bad':''));
+      var n = cboData.length;
+      function card(l,v,s,vcls){ return '<div class="mc"><div class="mc-l">'+l+'</div><div class="mc-v'+(vcls?(' '+vcls):'')+'">'+v+'</div>'+(s?'<div class="mc-s">'+s+'</div>':'')+'</div>'; }
+      mEl.innerHTML =
+        card('Faturamento', (hasC&&T.fat>0)?fmtUSD(T.fat):'---', 'margem '+(T.fat>0?marg.toFixed(1).replace('.',',')+'%':'---'), 'd-good') +
+        card('Gasto', fmtUSD(T.sp), n+' camp. &middot; '+periodLabel()) +
+        card('Lucro', hasC?fmtUSD(T.lucro):'---', 'ROI '+(roas>0?roas.toFixed(2).replace('.',','):'---'), (T.lucro>=0?'d-good':'d-bad')) +
+        card('ROAS', (hasC&&roas>0)?roas.toFixed(2).replace('.',','):'---', 'receita &divide; gasto', roasCls) +
+        card('Vendas', hasC?T.sales:'---', 'CPA '+cpa) +
+        card('IC', hasC?(T.ics+' <span style="font-size:15px;color:var(--ub-green-d);font-weight:700">&middot; CC '+cc.toFixed(1).replace('.',',')+'%</span>'):'---', 'CPI '+cpi+' &middot; CC = Vendas &divide; IC');
+      /* --- Top campanhas por lucro --- */
+      var top = cboData.slice().map(function(c){
+        var ps = c._periodSpend||0; var fv = campFat(c); var sv = (hasC&&c._conv)?(c._conv.sales||0):0;
+        return { c:c, sp:ps, fat:fv, lucro:fv-ps, sales:sv, roas: ps>0?fv/ps:0 };
+      }).filter(function(r){ return r.sp>0 || r.fat>0; }).sort(function(a,b){ return b.lucro-a.lucro; }).slice(0,8);
+      var tb = document.getElementById('resumoTopBody');
+      if (!top.length) { tb.innerHTML = '<tr><td colspan="7" class="ld">Sem gasto/faturamento no per&iacute;odo.</td></tr>'; }
+      else { tb.innerHTML = top.map(function(r){
+        var nm = (r.c.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        var ac = (r.c._accountName||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        var rc = r.roas>=1.5?'d-good':(r.roas>=1.3?'d-warn':(r.roas>0?'d-bad':''));
+        var lc = r.lucro>=0?'d-good':'d-bad';
+        return '<tr><td style="font-weight:600;color:var(--ub-ink)">'+nm+'</td>'
+          +'<td style="color:var(--ub-ink2)">'+ac+'</td>'
+          +'<td>'+fmtUSD(r.sp)+'</td>'
+          +'<td>'+(hasC?r.sales:'---')+'</td>'
+          +'<td style="color:#1a7f37">'+(hasC&&r.fat>0?fmtUSD(r.fat):'---')+'</td>'
+          +'<td><span class="'+lc+'">'+(hasC?fmtUSD(r.lucro):'---')+'</span></td>'
+          +'<td>'+(hasC&&r.roas>0?'<span class="'+rc+'">'+r.roas.toFixed(2).replace('.',',')+'</span>':'---')+'</td></tr>';
+      }).join(''); }
+    }
+    /* --- Mini-resumo de contas (usa allData se já foi carregado na aba Contas) --- */
+    var aEl = document.getElementById('resumoAccts'), aBadge = document.getElementById('resumoAcctBadge');
+    function ac(l,v,vcls){ return '<div class="mc"><div class="mc-l">'+l+'</div><div class="mc-v'+(vcls?(' '+vcls):'')+'">'+v+'</div></div>'; }
+    if (allData && allData.length) {
+      var ativas = allData.filter(function(a){return a.account_status===1;}).length;
+      var prob = allData.filter(function(a){return a.account_status===2||a.account_status===3;}).length;
+      var semCard = allData.filter(function(a){return !a._card;}).length;
+      if (aBadge) aBadge.textContent = allData.length+' carregadas';
+      aEl.innerHTML = ac('Total contas', allData.length) + ac('Ativas', ativas, 'd-good') + ac('Prob. pagamento', prob, prob>0?'d-warn':'') + ac('Sem cart&atilde;o', semCard, semCard>0?'d-bad':'');
+    } else {
+      if (aBadge) aBadge.textContent = 'não carregado';
+      aEl.innerHTML = '<div class="mc" style="grid-column:1/-1"><div class="mc-s" style="margin:0">Abra a aba <b>Contas</b> para carregar o resumo de contas.</div></div>';
+    }
   }
 
   /* Cards de métrica da aba CBO (estilo UTMify). Mesma base dos totais. */
@@ -4603,6 +4737,11 @@ html,body{background:var(--ub-bg)!important}
       cboPeriod = this.dataset.period;
       document.querySelectorAll('#mdb [data-period]').forEach(function(b) { b.classList.remove('on'); });
       this.classList.add('on');
+      /* Mantem os dois dropdowns de período (Campanhas e Dashboard) espelhando o período atual. */
+      var _cs = document.getElementById('cboPeriodSel'); if (_cs) _cs.value = cboPeriod;
+      var _rs = document.getElementById('resumoPeriodSel');
+      if (_rs) { if (cboPeriod==='today'||cboPeriod==='yesterday'||cboPeriod==='custom') _rs.value = cboPeriod; }
+      var _rc = document.getElementById('resumoCustomRange'); if (_rc) _rc.style.display = (cboPeriod==='custom') ? 'flex' : 'none';
       var cr = document.getElementById('customRange');
       if (cboPeriod === 'custom') {
         /* Mostra o calendario e espera o usuario clicar "Aplicar periodo". */
@@ -4625,6 +4764,32 @@ html,body{background:var(--ub-bg)!important}
   if (cboStatusSel) cboStatusSel.addEventListener('change', function(){ var p = document.querySelector('#mdb [data-cbostatus="'+this.value+'"]'); if (p) p.click(); });
   var cboPeriodSel = document.getElementById('cboPeriodSel');
   if (cboPeriodSel) cboPeriodSel.addEventListener('change', function(){ var p = document.querySelector('#mdb [data-period="'+this.value+'"]'); if (p) p.click(); });
+  /* Dashboard: seletor de período próprio (Hoje / Ontem / Personalizado) — reaproveita os pills ocultos. */
+  var resumoPeriodSel = document.getElementById('resumoPeriodSel');
+  if (resumoPeriodSel) resumoPeriodSel.addEventListener('change', function(){
+    var rc = document.getElementById('resumoCustomRange');
+    if (this.value === 'custom') {
+      if (rc) rc.style.display = 'flex';
+      var fEl = document.getElementById('resumoFrom'), tEl = document.getElementById('resumoTo');
+      if (fEl && !fEl.value) { var d7 = new Date(Date.now()-3*3600*1000); d7.setUTCDate(d7.getUTCDate()-7); fEl.value = d7.toISOString().split('T')[0]; }
+      if (tEl && !tEl.value) { tEl.value = new Date(Date.now()-3*3600*1000).toISOString().split('T')[0]; }
+      return; /* espera "Aplicar período" */
+    }
+    if (rc) rc.style.display = 'none';
+    var p = document.querySelector('#mdb [data-period="'+this.value+'"]'); if (p) p.click();
+  });
+  var resumoApplyBtn = document.getElementById('resumoApplyRange');
+  if (resumoApplyBtn) resumoApplyBtn.addEventListener('click', function(){
+    var f = (document.getElementById('resumoFrom')||{}).value, t = (document.getElementById('resumoTo')||{}).value;
+    if (!f || !t) { alert('Selecione data inicial e final.'); return; }
+    if (f > t) { var tmp=f; f=t; t=tmp; }
+    cboCustomFrom = f; cboCustomTo = t; cboPeriod = 'custom';
+    var _cs2 = document.getElementById('cboPeriodSel'); if (_cs2) _cs2.value = 'custom';
+    var _pp = document.querySelector('#mdb [data-period="custom"]'); if (_pp){ document.querySelectorAll('#mdb [data-period]').forEach(function(b){b.classList.remove('on');}); _pp.classList.add('on'); }
+    var sp = document.getElementById('spinResumo'); if (sp) sp.style.display='inline-block';
+    if (!cboData.length) { if (getTks() && getTks().length) loadCBO(); else if (sp) sp.style.display='none'; return; }
+    fetchCBOSpend(cboData.slice());
+  });
   var cboAcctSelEl = document.getElementById('cboAcctSel');
   if (cboAcctSelEl) cboAcctSelEl.addEventListener('change', function(){ applyCboFilters(); });
   var applyRangeBtn = document.getElementById('cboApplyRange');
@@ -4645,9 +4810,12 @@ html,body{background:var(--ub-bg)!important}
       this.classList.add('on');
       curTab = this.dataset.tab;
       document.getElementById('tab-'+curTab).classList.add('show');
-      if (curTab === 'hist') { renderHist(); fetchRoboHist(); }
+      if (curTab === 'resumo') { renderResumo(); if (!cboData.length && getTks() && getTks().length) { var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); } }
+      else if (curTab === 'contas') { if (!allData.length) load(); }
+      else if (curTab === 'hist') { renderHist(); fetchRoboHist(); }
       else if (curTab === 'orc') { renderOrc(); fetchRoboHist(); }
       else if (curTab === 'abo') { if (!aboData.length && !aboLoading) loadABO(); }
+      else if (curTab === 'notif') { if (window._notifOpen) window._notifOpen(); }
     });
   });
   /* Gaveta mobile (sidebar) */
@@ -4657,6 +4825,98 @@ html,body{background:var(--ub-bg)!important}
     if (mb) mb.addEventListener('click', function(){ mdb.classList.toggle('udb-drawer'); });
     if (bd) bd.addEventListener('click', function(){ mdb.classList.remove('udb-drawer'); });
     document.querySelectorAll('#mdb .udb-nav .tab-btn').forEach(function(b){ b.addEventListener('click', function(){ mdb.classList.remove('udb-drawer'); }); });
+  })();
+  /* ================= NOTIFICAÇÕES DE VENDA (PWA + som de caixa) ================= */
+  (function(){
+    var LS_SEEN='notif_seenSales', LS_LIST='notif_list', LS_UNREAD='notif_unread', LS_DAY='notif_day';
+    var audioCtx=null;
+    function todayBR(){ return new Date(Date.now()-3*3600000).toISOString().slice(0,10); }
+    function getList(){ try { return JSON.parse(localStorage.getItem(LS_LIST)||'[]'); } catch(e){ return []; } }
+    function setList(a){ try { localStorage.setItem(LS_LIST, JSON.stringify(a.slice(0,100))); } catch(e){} }
+    function getUnread(){ try { return parseInt(localStorage.getItem(LS_UNREAD)||'0',10)||0; } catch(e){ return 0; } }
+    function setUnread(n){ try { localStorage.setItem(LS_UNREAD, String(n)); } catch(e){} setBadge(); }
+    function setBadge(){ var b=document.getElementById('notifBadge'); if(!b)return; var n=getUnread(); b.textContent=n; b.style.display=n>0?'inline-block':'none'; }
+    function fmtMoney(v){ try { return 'US$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); } catch(e){ return 'US$ '+v; } }
+    function playCash(){
+      try {
+        audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+        if (audioCtx.state==='suspended') audioCtx.resume();
+        var t=audioCtx.currentTime;
+        [[1318,0.00,0.12],[1760,0.09,0.22],[2637,0.10,0.18]].forEach(function(n){
+          var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+          o.type='triangle'; o.frequency.value=n[0];
+          g.gain.setValueAtTime(0.0001,t+n[1]);
+          g.gain.exponentialRampToValueAtTime(0.35,t+n[1]+0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]+n[2]);
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start(t+n[1]); o.stop(t+n[1]+n[2]+0.03);
+        });
+      } catch(e){}
+    }
+    function pushNotif(title, body){
+      try {
+        if ('Notification' in window && Notification.permission==='granted') {
+          if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+            navigator.serviceWorker.ready.then(function(reg){ reg.showNotification(title,{ body:body, icon:'icon-192.png', badge:'icon-192.png', vibrate:[120,60,120], tag:'sale-'+Date.now(), renotify:true }); });
+          } else { new Notification(title,{ body:body, icon:'icon-192.png' }); }
+        }
+      } catch(e){}
+    }
+    function renderList(){
+      var el=document.getElementById('notifList'); if(!el) return;
+      var list=getList();
+      if(!list.length){ el.innerHTML='<div style="color:var(--ub-mut);font-size:13px;padding:14px 0">Nenhuma venda ainda. Quando cair uma venda, aparece aqui com som 💰.</div>'; return; }
+      el.innerHTML=list.map(function(x){
+        var d=new Date(x.t); var hh=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+        return '<div style="display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--ub-line2)">'
+          +'<div style="width:38px;height:38px;border-radius:10px;background:var(--ub-green-soft);color:var(--ub-green-d);display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 auto">💰</div>'
+          +'<div style="flex:1"><div style="font-weight:700;font-size:13.5px">'+(x.title||'Nova venda')+'</div><div style="font-size:12px;color:var(--ub-ink2)">'+(x.body||'')+'</div></div>'
+          +'<div style="font-size:11.5px;color:var(--ub-mut);white-space:nowrap">'+hh+'</div></div>';
+      }).join('');
+    }
+    function markRead(){ setUnread(0); }
+    function addNotif(n){ var l=getList(); l.unshift(n); setList(l); setUnread(getUnread()+1); if (curTab==='notif'){ renderList(); markRead(); } }
+    function onNewSales(delta, revDelta){
+      playCash();
+      var title='💰 '+(delta===1?'Nova venda!':delta+' novas vendas!');
+      var body=delta===1?('+'+fmtMoney(revDelta)+' em faturamento'):(delta+' vendas · +'+fmtMoney(revDelta));
+      pushNotif(title, body); addNotif({ t:Date.now(), n:delta, rev:revDelta, title:title, body:body });
+    }
+    function poll(){
+      try {
+        if (typeof getPbUrl!=='function') return;
+        var u=getPbUrl(); if(!u) return;
+        var day=todayBR();
+        if (localStorage.getItem(LS_DAY)!==day){ localStorage.setItem(LS_DAY,day); localStorage.removeItem(LS_SEEN); }
+        fetch(u+'/pbsales?since='+day+'&until='+day,{headers:{'Accept':'application/json'}})
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            var by=(d&&d.byCamp)||{}, totSales=0, totRev=0;
+            Object.keys(by).forEach(function(k){ totSales+=(by[k].sales||0); totRev+=(by[k].revenue||0); });
+            var prev=null; try { prev=JSON.parse(localStorage.getItem(LS_SEEN)||'null'); } catch(e){}
+            if (prev && typeof prev.sales==='number'){ var delta=totSales-prev.sales; if (delta>0) onNewSales(delta, Math.max(0,totRev-(prev.rev||0))); }
+            localStorage.setItem(LS_SEEN, JSON.stringify({ sales:totSales, rev:totRev }));
+          }).catch(function(){});
+      } catch(e){}
+    }
+    if ('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+    var deferredPrompt=null;
+    window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferredPrompt=e;
+      var h=document.getElementById('notifInstallHint'); if(h){ h.style.display='block'; h.innerHTML='📲 Dá pra <b>instalar como app</b> neste aparelho. <a href="#" id="notifInstallBtn" style="color:#005AE3;font-weight:700">Instalar agora</a>';
+        var b=document.getElementById('notifInstallBtn'); if(b) b.addEventListener('click', function(ev){ ev.preventDefault(); if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt=null; } }); } });
+    function updateStatus(){ var s=document.getElementById('notifStatus'); if(!s) return; var perm=('Notification' in window)?Notification.permission:'unsupported'; s.textContent = perm==='granted'?'✓ Notificações ativas':(perm==='denied'?'Notificações bloqueadas no navegador':'Notificações desativadas'); }
+    function wire(){
+      var en=document.getElementById('notifEnable');
+      if(en) en.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); audioCtx.resume&&audioCtx.resume(); }catch(e){} if('Notification' in window){ Notification.requestPermission().then(updateStatus); } else updateStatus(); });
+      var tt=document.getElementById('notifTest');
+      if(tt) tt.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); pushNotif('💰 Teste de venda','Som e notificação funcionando.'); });
+      var cl=document.getElementById('notifClear');
+      if(cl) cl.addEventListener('click', function(){ setList([]); setUnread(0); renderList(); });
+      updateStatus(); setBadge(); renderList();
+    }
+    window._notifOpen=function(){ markRead(); renderList(); updateStatus(); };
+    wire();
+    poll(); setInterval(poll, 60000);
   })();
   /* Controles do painel de Historico */
   var histSrchEl = document.getElementById('histSrch');
@@ -4714,7 +4974,8 @@ html,body{background:var(--ub-bg)!important}
       renderOrc();
     });
   });
-  document.getElementById('btnRefresh').addEventListener('click', function() { if (curTab === 'cbo') loadCBO(); else if (curTab === 'abo') loadABO(); else load(); });
+  document.getElementById('btnRefresh').addEventListener('click', function() { if (curTab === 'cbo' || curTab === 'resumo') loadCBO(); else if (curTab === 'abo') loadABO(); else load(); });
+  (function(){ var br = document.getElementById('btnLoadResumo'); if (br) br.addEventListener('click', function(){ var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); }); })();
   document.getElementById('btnTokens').addEventListener('click', openModal);
   document.getElementById('btnLoadCBO').addEventListener('click', loadCBO);
   /* PAUSAR/ATIVAR TUDO (so campanhas com CBO no nome). Age nas campanhas JA carregadas (cboData). */
@@ -4895,7 +5156,11 @@ html,body{background:var(--ub-bg)!important}
   })();
 
   fetchFxLive();
-  load();
+  /* Landing = Dashboard (Resumo). Com token: carrega campanhas (preenche os cards + Top). Sem token:
+     mostra a tela de setup na aba Contas e o resumo pede o token. Aba Contas carrega sob demanda. */
+  renderResumo();
+  if (getTks() && getTks().length) { var _spR=document.getElementById('spinResumo'); if(_spR)_spR.style.display='inline-block'; loadCBO(); }
+  else { load(); }
   if (timer) clearInterval(timer);
   /* Auto-refresh a cada 5 min SO no desktop. No celular (toque/tela pequena) NAO recarrega
      sozinho — reconstruir a tabela jogava o scroll pro topo e atrapalhava o usuario.
