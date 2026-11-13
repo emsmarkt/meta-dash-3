@@ -3,6 +3,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scalefy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -11,7 +12,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Meta Dash">
+<meta name="apple-mobile-web-app-title" content="Scalefy">
+<meta name="application-name" content="Scalefy">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>html,body{background:#ffffff!important;margin:0;padding:0}*{box-sizing:border-box;margin:0;padding:0}#mdb{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#ffffff;min-height:100vh;color:#1f2328;padding:20px 28px;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;width:100vw;overflow-x:hidden}#mdb .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 0 18px;border-bottom:1px solid #e4e8ee;margin-bottom:20px;flex-wrap:wrap;gap:10px}#mdb .hdr h1{font-size:20px;font-weight:600;color:#0d1117;display:flex;align-items:center;gap:10px}#mdb .dot{width:9px;height:9px;background:#1a7f37;border-radius:50%;animation:mdPulse 2s infinite;flex-shrink:0}@keyframes mdPulse{0%,100%{opacity:1}50%{opacity:.4}}#mdb .hdr-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#mdb .ts{font-size:12px;color:#656d76}#mdb .tabs{display:flex;gap:3px;background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:4px}#mdb .tab-btn{background:transparent;border:none;border-radius:6px;padding:7px 18px;font-size:13px;color:#57606a;cursor:pointer;font-family:inherit;white-space:nowrap}#mdb .tab-btn.on{background:#e4e8ee;color:#0d1117}#mdb .tab-pane{display:none}#mdb .tab-pane.show{display:block}#mdb .btn{background:#e4e8ee;border:1px solid #d0d7de;border-radius:6px;padding:7px 14px;cursor:pointer;font-size:13px;color:#1f2328;display:inline-flex;align-items:center;gap:6px;font-family:inherit}#mdb .btn:hover{background:#d0d7de;color:#0d1117}#mdb .btn-blue{background:#0969da;border-color:#0969da;color:#fff}#mdb .btn-blue:hover{background:#0969da}#mdb .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}#mdb .mc{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:14px 16px}#mdb .mc-l{font-size:12px;color:#57606a;margin-bottom:5px}#mdb .mc-v{font-size:26px;font-weight:600;color:#0d1117}#mdb .mc-s{font-size:12px;color:#656d76;margin-top:3px}#mdb .filters{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}#mdb .pill{font-size:12.5px;padding:5px 12px;border-radius:20px;border:1px solid #d0d7de;cursor:pointer;color:#57606a;background:transparent;white-space:nowrap;font-family:inherit;user-select:none}#mdb .pill.on{background:#e4e8ee;color:#0d1117;border-color:#0969da}#mdb .srch{flex:1;min-width:140px;max-width:220px;background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;padding:6px 11px;font-size:13px;color:#1f2328;outline:none;font-family:inherit}#mdb .srch:focus{border-color:#0969da}#mdb .tbl-wrap{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;overflow:auto;max-height:64vh}#mdb table{width:100%;border-collapse:collapse;font-size:13px}#mdb th{font-weight:500;color:#57606a;font-size:12px;padding:10px 14px;border-bottom:1px solid #e4e8ee;text-align:left;white-space:nowrap;background:#f6f8fa;position:sticky;top:0;z-index:1}#mdb td{padding:9px 14px;border-bottom:1px solid #e4e8ee;white-space:nowrap;color:#1f2328;vertical-align:middle}#mdb tr:last-child td{border-bottom:none}#mdb tr:hover td{background:#eef1f5}#mdb .badge{display:inline-block;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px}#mdb .b-gr{background:rgba(63,185,80,.15);color:#1a7f37}#mdb .b-r{background:rgba(248,81,73,.15);color:#cf222e}#mdb .b-a{background:rgba(210,153,34,.15);color:#9a6700}#mdb .b-gy{background:rgba(110,118,129,.15);color:#57606a}#mdb .b-bl{background:rgba(56,139,253,.15);color:#0969da}#mdb .b-p{background:rgba(188,140,255,.15);color:#8250df}#mdb .b-o{background:rgba(255,123,114,.15);color:#cf222e}#mdb .ld{text-align:center;padding:44px;color:#656d76;font-size:14px}#mdb .spin{display:inline-block;width:15px;height:15px;border:2px solid #d0d7de;border-top-color:#0969da;border-radius:50%;animation:mdSpin .8s linear infinite;vertical-align:-3px;margin-right:6px}@keyframes mdSpin{to{transform:rotate(360deg)}}#mdb .alert-box{background:rgba(248,81,73,.1);border-left:3px solid #cf222e;padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;color:#cf222e;margin-bottom:14px}#mdb .setup-box{background:#f6f8fa;border:1px solid #d0d7de;border-radius:10px;padding:32px;max-width:500px;margin:48px auto;text-align:center}#mdb .setup-box h2{color:#0d1117;font-size:17px;margin-bottom:10px}#mdb .setup-box p{color:#57606a;font-size:13px;margin-bottom:20px;line-height:1.6}#mdb .setup-inp{width:100%;background:#ffffff;border:1px solid #d0d7de;border-radius:6px;padding:11px 13px;font-size:13px;color:#1f2328;outline:none;font-family:monospace;margin-bottom:12px}#mdb .setup-inp:focus{border-color:#0969da}#mdb .cbo-info{background:#f6f8fa;border:1px solid #e4e8ee;border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:13px;color:#57606a;line-height:1.7}#mdb .cbo-info strong{color:#0d1117}#mdb .cbo-inp{width:100px;background:#ffffff;border:1px solid #d0d7de;border-radius:5px;padding:6px 8px;font-size:13px;color:#1f2328;text-align:right;font-family:inherit}#mdb .cbo-inp:focus{outline:none;border-color:#0969da}#mdb .cbo-date{background:#ffffff;border:1px solid #d0d7de;border-radius:5px;padding:6px 8px;font-size:12px;color:#1f2328;font-family:inherit;cursor:pointer;width:136px}#mdb .cbo-date:focus{outline:none;border-color:#0969da}#mdb .save-btn{background:#0969da;border:1px solid #0969da;border-radius:5px;padding:6px 12px;font-size:12px;color:#fff;cursor:pointer;font-family:inherit;white-space:nowrap}#mdb .save-btn:hover{background:#0969da}#mdb .save-btn:disabled{background:#e4e8ee;border-color:#d0d7de;color:#656d76;cursor:not-allowed}#mdb .d-good{color:#1a7f37;font-weight:600;font-size:13px}#mdb .d-warn{color:#9a6700;font-weight:600;font-size:13px}#mdb .d-bad{color:#cf222e;font-weight:600;font-size:13px}#mdb .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;display:none;align-items:center;justify-content:center}#mdb .modal-bg.show{display:flex}#mdb .modal{background:#f6f8fa;border:1px solid #d0d7de;border-radius:10px;padding:22px;min-width:320px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto}#mdb .modal h2{font-size:15px;font-weight:600;color:#0d1117;margin-bottom:8px}#mdb .modal p{font-size:12px;color:#57606a;margin-bottom:14px;line-height:1.5}#mdb .modal h3{font-size:13px;color:#57606a;margin:16px 0 8px;border-top:1px solid #e4e8ee;padding-top:12px}#mdb .tk-row{display:flex;align-items:center;gap:7px;margin-bottom:9px}#mdb .tk-inp{flex:1;background:#ffffff;border:1px solid #d0d7de;border-radius:6px;padding:7px 10px;font-size:12px;color:#1f2328;outline:none;font-family:monospace}#mdb .tk-inp:focus{border-color:#0969da}#mdb .tk-rm{background:none;border:none;color:#cf222e;cursor:pointer;font-size:17px;line-height:1;padding:0 4px}#mdb .mfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}#mdb .foot-note{margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:#656d76;flex-wrap:wrap;gap:4px}#mdb .th-group{background:#ffffff;font-size:10px;color:#656d76;text-transform:uppercase;letter-spacing:.5px}#mdb .period-bar{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 #mdb .tgl-btn{border:none;border-radius:5px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
@@ -288,7 +290,7 @@ html,body{background:var(--ub-bg)!important}
 <div id="mdb">
   <div class="udb-app">
     <aside class="udb-sidebar" id="udbSidebar">
-      <div class="udb-logo"><span class="u"></span>Meta Dash</div>
+      <div class="udb-logo"><span class="u"></span>Scalefy</div>
       <div class="udb-dash"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> T2 Emerson — (UTC-3) <svg class="cx" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
       <div class="udb-sec">Menu</div>
       <nav class="udb-nav">
@@ -717,7 +719,7 @@ html,body{background:var(--ub-bg)!important}
     } catch(e) {
       var inIframe = false; try { inIframe = (window.self !== window.top); } catch(x) { inIframe = true; }
       alert('Nao consegui SALVAR os tokens neste contexto' + (inIframe ? ' (o navegador bloqueia o armazenamento dentro do site embutido).' : '.') +
-            '\n\nAbra o painel pelo link DIRETO p/ salvar de vez:\nhttps://emsmarkt.github.io/meta-dash/\n(no celular: menu do navegador -> "Adicionar a tela inicial").');
+            '\n\nAbra o painel pelo link DIRETO p/ salvar de vez:\nhttps://emsmarkt.github.io/meta-dash-3/\n(no celular: menu do navegador -> "Adicionar a tela inicial").');
     }
   }
   function getUtmTk() { try { return localStorage.getItem('utm_tk') || ''; } catch(e) { return ''; } }
@@ -4837,20 +4839,42 @@ html,body{background:var(--ub-bg)!important}
     function setUnread(n){ try { localStorage.setItem(LS_UNREAD, String(n)); } catch(e){} setBadge(); }
     function setBadge(){ var b=document.getElementById('notifBadge'); if(!b)return; var n=getUnread(); b.textContent=n; b.style.display=n>0?'inline-block':'none'; }
     function fmtMoney(v){ try { return 'US$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); } catch(e){ return 'US$ '+v; } }
+    /* "Ká-ching" de caixa registradora — sintetizado (Web Audio), sem arquivo/áudio externo:
+       gaveta mecânica (ruído + thud grave) + 2 sinos metálicos inarmônicos (cha-CHING). */
     function playCash(){
       try {
         audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
         if (audioCtx.state==='suspended') audioCtx.resume();
-        var t=audioCtx.currentTime;
-        [[1318,0.00,0.12],[1760,0.09,0.22],[2637,0.10,0.18]].forEach(function(n){
-          var o=audioCtx.createOscillator(), g=audioCtx.createGain();
-          o.type='triangle'; o.frequency.value=n[0];
-          g.gain.setValueAtTime(0.0001,t+n[1]);
-          g.gain.exponentialRampToValueAtTime(0.35,t+n[1]+0.02);
-          g.gain.exponentialRampToValueAtTime(0.0001,t+n[1]+n[2]);
-          o.connect(g); g.connect(audioCtx.destination);
-          o.start(t+n[1]); o.stop(t+n[1]+n[2]+0.03);
-        });
+        var ctx=audioCtx, t=ctx.currentTime;
+        var master=ctx.createGain(); master.gain.value=0.9; master.connect(ctx.destination);
+        /* gaveta (ka-chunk): rajada de ruído filtrado + batida grave */
+        function drawer(at, vol){
+          var dur=0.085;
+          var buf=ctx.createBuffer(1, Math.max(1,Math.floor(ctx.sampleRate*dur)), ctx.sampleRate);
+          var d=buf.getChannelData(0); for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*(1-i/d.length); }
+          var src=ctx.createBufferSource(); src.buffer=buf;
+          var bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1700; bp.Q.value=0.7;
+          var g=ctx.createGain(); g.gain.setValueAtTime(vol,at); g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
+          src.connect(bp); bp.connect(g); g.connect(master); src.start(at); src.stop(at+dur);
+          var o=ctx.createOscillator(), og=ctx.createGain();
+          o.type='sine'; o.frequency.setValueAtTime(165,at); o.frequency.exponentialRampToValueAtTime(70,at+0.09);
+          og.gain.setValueAtTime(vol*0.85,at); og.gain.exponentialRampToValueAtTime(0.0001,at+0.11);
+          o.connect(og); og.connect(master); o.start(at); o.stop(at+0.13);
+        }
+        /* sino metálico: parciais inarmônicos (timbre de caixa) */
+        function bell(at, base, vol, dec){
+          [[1,1],[2.01,0.6],[2.76,0.4],[3.93,0.22]].forEach(function(p){
+            var o=ctx.createOscillator(), g=ctx.createGain();
+            o.type='sine'; o.frequency.value=base*p[0];
+            g.gain.setValueAtTime(0.0001,at);
+            g.gain.exponentialRampToValueAtTime(vol*p[1],at+0.008);
+            g.gain.exponentialRampToValueAtTime(0.0001,at+dec);
+            o.connect(g); g.connect(master); o.start(at); o.stop(at+dec+0.03);
+          });
+        }
+        drawer(t, 0.5);
+        bell(t+0.02, 1050, 0.30, 0.42);   /* "cha"  */
+        bell(t+0.18, 1300, 0.38, 0.62);   /* "ching" — mais brilhante e longo */
       } catch(e){}
     }
     function pushNotif(title, body){
@@ -5148,7 +5172,7 @@ html,body{background:var(--ub-bg)!important}
     var tip = document.createElement('div');
     tip.style.cssText = 'background:rgba(210,153,34,.12);border:1px solid #9a6700;border-radius:6px;padding:9px 12px;margin-bottom:12px;font-size:12px;color:#e3b341;line-height:1.5';
     tip.innerHTML = '&#9888; Para os <b>tokens ficarem salvos</b> (e melhor no celular), abra o painel pelo link DIRETO: '
-      + '<a href="https://emsmarkt.github.io/meta-dash/" target="_blank" rel="noopener" style="color:#0969da;font-weight:700">emsmarkt.github.io/meta-dash</a>. '
+      + '<a href="https://emsmarkt.github.io/meta-dash-3/" target="_blank" rel="noopener" style="color:#0969da;font-weight:700">emsmarkt.github.io/meta-dash-3</a>. '
       + 'No celular, use o menu do navegador &rarr; <b>"Adicionar &agrave; tela inicial"</b> (fica como app e salva os tokens). '
       + 'Aqui dentro do site embutido o navegador apaga os tokens ao fechar.';
     var mdb = document.getElementById('mdb');
