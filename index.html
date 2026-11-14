@@ -572,9 +572,26 @@ html,body{background:var(--ub-bg)!important}
       <p style="font-size:13px;color:var(--ub-ink2);margin-bottom:14px;line-height:1.55">Receba um aviso <b>toda vez que cai uma venda</b> (JVZoo, Cartpanda, Digistore). Com <b>som de caixa</b> &#128176; quando o painel est&#225; aberto e, depois de instalar como app, <b>notifica&#231;&#227;o no celular</b>.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-blue" id="notifEnable">&#128276; Ativar notifica&#231;&#245;es</button>
-        <button class="btn" id="notifTest">&#128266; Testar som</button>
         <button class="btn" id="notifClear">Limpar lista</button>
         <span id="notifStatus" style="font-size:12.5px;color:var(--ub-mut)"></span>
+      </div>
+      <!-- Som da venda (app aberto) -->
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--ub-line2)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--ub-ink);margin-bottom:9px">&#127925; Som da venda <span style="font-weight:400;color:var(--ub-mut)">(com o app aberto)</span></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <select class="ctrl udb-ctrl" id="notifSoundSel" style="width:auto;min-width:200px">
+            <option value="cash">Caixa registradora</option>
+            <option value="coins">Moedas (sintetizado)</option>
+            <option value="chaching">Cha-ching (sintetizado)</option>
+            <option value="bell">Sino (sintetizado)</option>
+            <option value="custom">Meu som (enviar&hellip;)</option>
+          </select>
+          <button class="btn" id="notifTest">&#128266; Testar som</button>
+          <button class="btn" id="notifUploadBtn" style="display:none">&#128228; Enviar .mp3</button>
+          <input type="file" id="notifSoundFile" accept="audio/*" style="display:none">
+          <span id="notifSoundInfo" style="font-size:12px;color:var(--ub-mut)"></span>
+        </div>
+        <div style="font-size:11.5px;color:var(--ub-mut);margin-top:8px;line-height:1.5">Com o <b>app fechado/tela bloqueada</b>, o som &eacute; o do <b>sistema do celular</b> (a web n&atilde;o deixa trocar). Pra customizar nesse caso: Config. do Android &rarr; Apps &rarr; (Scalefy/Chrome) &rarr; Notifica&ccedil;&otilde;es &rarr; Som.</div>
       </div>
       <div id="notifInstallHint" style="display:none;margin-top:12px;font-size:12.5px;color:#8a5a00;background:var(--ub-amber-soft);border:1px solid #ffd9a8;border-radius:10px;padding:10px 14px;line-height:1.5"></div>
     </div>
@@ -5087,15 +5104,22 @@ html,body{background:var(--ub-bg)!important}
     function fmtMoney(v){ try { return 'US$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); } catch(e){ return 'US$ '+v; } }
     /* Som de venda = mp3 de caixa registradora (cash.mp3) com o app ABERTO. Se o arquivo faltar
        ou o navegador bloquear, cai no sintetizado (playCashSynth). O push com app FECHADO usa o som do sistema. */
-    var saleAudio=null;
+    var LS_SOUND='notif_sound', LS_SOUNDCUST='notif_sound_custom';
+    function getSound(){ try{ return localStorage.getItem(LS_SOUND)||'cash'; }catch(e){ return 'cash'; } }
+    function setSoundChoice(v){ try{ localStorage.setItem(LS_SOUND,v); }catch(e){} }
+    var saleAudio=null, custAudio=null, custSrc=null;
     function getSaleAudio(){ if(!saleAudio){ try{ saleAudio=new Audio('cash.mp3'); saleAudio.preload='auto'; }catch(e){ saleAudio=null; } } return saleAudio; }
+    function getCustAudio(){ try{ var d=localStorage.getItem(LS_SOUNDCUST); if(d){ if(!custAudio||custSrc!==d){ custAudio=new Audio(d); custSrc=d; } return custAudio; } }catch(e){} return null; }
+    function playFile(a){ if(!a) return false; try{ a.currentTime=0; var pr=a.play(); if(pr&&pr.catch) pr.catch(function(){ playCashSynth('chaching'); }); return true; }catch(e){ return false; } }
+    /* Toca o som escolhido nas config. (app aberto). cash=mp3, custom=upload, resto=sintetizado. */
     function playCash(){
-      var a=getSaleAudio();
-      if(a){ try{ a.currentTime=0; var pr=a.play(); if(pr&&pr.catch) pr.catch(function(){ playCashSynth(); }); return; }catch(e){} }
-      playCashSynth();
+      var s=getSound();
+      if(s==='cash'){ if(playFile(getSaleAudio())) return; playCashSynth('chaching'); return; }
+      if(s==='custom'){ if(playFile(getCustAudio())) return; playCashSynth('chaching'); return; }
+      playCashSynth(s);
     }
-    /* Fallback sintetizado (Web Audio): gaveta mecânica + 2 sinos inarmônicos (cha-CHING). */
-    function playCashSynth(){
+    /* Sintetizado (Web Audio). variant: 'chaching' | 'coins' | 'bell'. */
+    function playCashSynth(variant){
       try {
         audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
         if (audioCtx.state==='suspended') audioCtx.resume();
@@ -5126,6 +5150,9 @@ html,body{background:var(--ub-bg)!important}
             o.connect(g); g.connect(master); o.start(at); o.stop(at+dec+0.03);
           });
         }
+        if(variant==='bell'){ bell(t,1100,0.42,0.95); bell(t+0.015,1650,0.26,0.95); return; }
+        if(variant==='coins'){ for(var k=0;k<6;k++){ bell(t+k*0.055, 2000+Math.random()*900, 0.16, 0.16); } drawer(t,0.28); return; }
+        /* chaching (padrão) */
         drawer(t, 0.5);
         bell(t+0.02, 1050, 0.30, 0.42);   /* "cha"  */
         bell(t+0.18, 1300, 0.38, 0.62);   /* "ching" — mais brilhante e longo */
@@ -5215,11 +5242,33 @@ html,body{background:var(--ub-bg)!important}
         } else updateStatus();
       });
       var tt=document.getElementById('notifTest');
-      if(tt) tt.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); pushNotif('💰 Teste de venda','Som e notificação funcionando.'); try{ var u=getPbUrl(); if(u) fetch(u+'/pushtest').catch(function(){}); }catch(e){} });
+      if(tt) tt.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); });
       var cl=document.getElementById('notifClear');
       if(cl) cl.addEventListener('click', function(){ setList([]); setUnread(0); renderList(); });
+      /* ── Seletor de som da venda ── */
+      var sel=document.getElementById('notifSoundSel');
+      var upBtn=document.getElementById('notifUploadBtn');
+      var fileInp=document.getElementById('notifSoundFile');
+      var info=document.getElementById('notifSoundInfo');
+      function reflectSound(){
+        var v=getSound(); if(sel) sel.value=v;
+        if(upBtn) upBtn.style.display = (v==='custom') ? 'inline-flex' : 'none';
+        if(info){ var hasCust=false; try{ hasCust=!!localStorage.getItem(LS_SOUNDCUST); }catch(e){} info.textContent = (v==='custom') ? (hasCust?'✓ som próprio carregado':'envie um .mp3 (até ~800KB)') : ''; }
+      }
+      if(sel) sel.addEventListener('change', function(){ setSoundChoice(this.value); reflectSound(); try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} if(this.value!=='custom') playCash(); else { var hc=false; try{hc=!!localStorage.getItem(LS_SOUNDCUST);}catch(e){} if(hc) playCash(); } });
+      if(upBtn) upBtn.addEventListener('click', function(){ if(fileInp) fileInp.click(); });
+      if(fileInp) fileInp.addEventListener('change', function(){
+        var f=this.files&&this.files[0]; if(!f) return;
+        if(f.size>900*1024){ if(info) info.textContent='✗ arquivo grande demais (máx ~800KB)'; return; }
+        var rd=new FileReader();
+        rd.onload=function(){ try{ localStorage.setItem(LS_SOUNDCUST, rd.result); custAudio=null; setSoundChoice('custom'); reflectSound(); try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); }catch(e){ if(info) info.textContent='✗ não coube no armazenamento (tente um .mp3 menor)'; } };
+        rd.readAsDataURL(f);
+      });
+      reflectSound();
       updateStatus(); setBadge(); renderList();
     }
+    /* Service Worker avisa (push chegou) -> toca o som escolhido se o app estiver aberto/visível. */
+    try { if('serviceWorker' in navigator){ navigator.serviceWorker.addEventListener('message', function(ev){ if(ev.data && ev.data.type==='sale-sound'){ playCash(); } }); } } catch(e){}
     window._notifOpen=function(){ markRead(); renderList(); updateStatus(); };
     wire();
     poll(); setInterval(poll, 60000);

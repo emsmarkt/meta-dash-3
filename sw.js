@@ -1,5 +1,5 @@
 /* Scalefy — Service Worker (PWA + Web Push) */
-var SW_VERSION = 'scalefy-sw-1';
+var SW_VERSION = 'scalefy-sw-2';
 
 self.addEventListener('install', function(e){ self.skipWaiting(); });
 self.addEventListener('activate', function(e){ e.waitUntil(self.clients.claim()); });
@@ -22,7 +22,13 @@ self.addEventListener('push', function(event){
     renotify: true,
     data: data
   };
-  event.waitUntil(self.registration.showNotification(title, opts));
+  /* mostra a notificação E avisa o app aberto (foreground) p/ tocar o som escolhido (cash.mp3/custom). */
+  event.waitUntil(Promise.all([
+    self.registration.showNotification(title, opts),
+    self.clients.matchAll({ type:'window', includeUncontrolled:true }).then(function(list){
+      list.forEach(function(c){ try { c.postMessage({ type:'sale-sound', data: data }); } catch(e){} });
+    })
+  ]));
 });
 
 /* Clicar na notificação abre/foca o dash */
