@@ -222,11 +222,16 @@ html,body{background:var(--ub-bg)!important}
 #mdb .cbo-info{background:#f4f8fe;border:1px solid #cfe0fb;border-left:3px solid var(--ub-blue);border-radius:0 10px 10px 0;color:#415574}
 #mdb .cbo-info strong{color:#0d2c54}
 #mdb .tbl-wrap{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:16px;box-shadow:0 2px 8px rgba(34,41,47,.05)}
-#mdb th{background:var(--ub-th);color:var(--ub-ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--ub-line);padding:12px 14px}
+#mdb th{background:var(--ub-th);color:var(--ub-ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--ub-line);padding:12px 14px}
 #mdb thead th:first-child,#mdb thead tr:first-child th{background:var(--ub-th)}
-#mdb td{padding:12px 14px;border-bottom:1px solid var(--ub-line2);color:var(--ub-ink)}
+#mdb td{padding:12px 14px;border-bottom:1px solid var(--ub-line2);color:var(--ub-ink);font-variant-numeric:tabular-nums}
+/* linhas verticais separando as colunas (melhor leitura) */
+#mdb #tab-cbo th,#mdb #tab-cbo td,#mdb #cboDrill th,#mdb #cboDrill td{border-right:1px solid var(--ub-line2)}
+#mdb #tab-cbo th:last-child,#mdb #tab-cbo td:last-child,#mdb #cboDrill th:last-child,#mdb #cboDrill td:last-child{border-right:none}
 #mdb tbody tr:nth-child(even) td{background:#fcfcfd}
 #mdb tbody tr:hover td{background:#f3f7ff}
+/* destaque nos cabeçalhos das métricas-chave (ordenáveis) */
+#mdb #thVendas,#mdb #thCPA,#mdb #thLucro,#mdb #thRoas{background:#eef3ff;color:var(--ub-blue)}
 #mdb tbody td:first-child,#mdb tbody tr:hover td:first-child,#mdb thead th:first-child{background:var(--ub-card)}
 #mdb tbody tr:nth-child(even) td:first-child{background:#fcfcfd}
 #mdb thead th:first-child{background:var(--ub-th)}
@@ -1414,9 +1419,9 @@ html,body{background:var(--ub-bg)!important}
   function finish(accounts) {
     allData = accounts; renderMetrics(accounts); renderTable();
     var now = new Date();
-    var ts = now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    document.getElementById('tsLbl').textContent = 'Atualizado: '+ts;
-    document.getElementById('lastUpd').textContent = 'Ultima atualizacao: '+ts;
+    var ts = now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+    document.getElementById('tsLbl').textContent = 'Atualizado: '+ts+' (BR)';
+    document.getElementById('lastUpd').textContent = 'Ultima atualizacao: '+ts+' (BR)';
     var uns = accounts.filter(function(a) { return a.account_status === 3; });
     var ab = document.getElementById('alertBox');
     if (uns.length) { ab.style.display = 'block'; ab.innerHTML = '<strong>Pagamento pendente:</strong> '+uns.map(function(a){return a.name;}).join(', '); } else { ab.style.display = 'none'; }
@@ -3522,6 +3527,23 @@ html,body{background:var(--ub-bg)!important}
   var _drill = { campIdx: null, adsetId: null, adsetName: '' };
   function drillRange() { var p = periodDates(); var s, u; if (p) { s = p.since; u = p.until; } else { var d = new Date(); d.setMonth(d.getMonth()-36); s = d.toISOString().slice(0,10); u = new Date().toISOString().slice(0,10); } return 'time_range=' + encodeURIComponent(JSON.stringify({ since: s, until: u })); }
   function escD(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  /* Switch de status (igual card) p/ conjunto/anúncio no drill. kind='set'|'ad'. */
+  function drillSwitch(kind, id, active){
+    var bg = active ? 'var(--ub-blue)' : '#cfd3dc', knob = active ? '21px' : '3px';
+    return '<button class="drill-tgl" data-kind="'+kind+'" data-id="'+id+'" data-active="'+(active?'1':'0')+'" title="'+(active?'Pausar':'Ativar')+'" style="width:40px;height:23px;border-radius:13px;border:none;cursor:pointer;position:relative;background:'+bg+';flex:0 0 auto"><span style="position:absolute;top:3px;left:'+knob+';width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s"></span></button>';
+  }
+  function drillToggle(kind, id, active){
+    var c = cboData[_drill.campIdx]; if (!c) return;
+    var newStatus = active ? 'PAUSED' : 'ACTIVE';
+    var lbl = (kind==='set') ? 'Conjunto' : 'Anúncio';
+    withTokenFallback(c._tk, function(tk){ return postForm(id, tk, { status: newStatus }); })
+      .then(function(){
+        if (typeof notifyOk === 'function') notifyOk(lbl + (newStatus==='PAUSED'?' pausado':' ativado'), '');
+        if (kind==='set'){ (c._adsets||[]).forEach(function(s){ if(String(s.id)===String(id)) s.effective_status=newStatus; }); renderDrillSets(); }
+        else { renderDrillAds(_drill.adsetId, _drill.adsetName); }
+      })
+      .catch(function(e){ var m=(e&&e.message)?e.message:String(e); if (typeof notifyErr==='function') notifyErr('Erro ao '+(active?'pausar':'ativar')+' '+lbl.toLowerCase(), m); else alert(m); });
+  }
   function openDrill(i) {
     var c = cboData[i]; if (!c) return;
     _drill.campIdx = i; _drill.adsetId = null;
@@ -3557,13 +3579,16 @@ html,body{background:var(--ub-bg)!important}
         var stTxt = st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">' + ({PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'}[st]||st) + '</span>' : '&mdash;');
         var bid = (s.bid_amount!=null && +s.bid_amount>0) ? fmtUSD(+s.bid_amount/100) : '&mdash;';
         var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
+        var active = st==='ACTIVE';
+        var tgl = (st && st!=='DISAPPROVED' && st!=='WITH_ISSUES' && s.id) ? drillSwitch('set', r.adset_id, active) : '';
         return '<tr class="drill-row-click" data-adset="' + r.adset_id + '" data-adname="' + escD(r.adset_name).replace(/"/g,'&quot;') + '">'
           + '<td style="font-weight:600;color:var(--ub-ink);max-width:260px;white-space:normal">' + escD(r.adset_name||'(sem nome)') + '</td>'
-          + '<td>' + stTxt + '</td><td>' + bid + '</td><td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td><td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td>'
+          + '<td><span style="display:inline-flex;align-items:center;gap:8px">' + tgl + stTxt + '</span></td><td>' + bid + '</td><td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td><td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td>'
           + '<td style="color:var(--ub-blue);font-weight:600;white-space:nowrap">Anúncios &rsaquo;</td></tr>';
       }).join('');
-      box.innerHTML = '<div class="drill-sec">' + rows.length + ' conjunto(s) &middot; toque p/ ver os anúncios</div>'
+      box.innerHTML = '<div class="drill-sec">' + rows.length + ' conjunto(s) &middot; toque na linha p/ ver os anúncios &middot; use o botão de status p/ pausar/ativar</div>'
         + '<div class="tbl-wrap"><table><thead><tr><th>Conjunto</th><th>Status</th><th>Bid</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>CPC</th><th>CTR</th><th></th></tr></thead><tbody>' + body + '</tbody></table></div>';
+      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(ev){ ev.stopPropagation(); drillToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
       box.querySelectorAll('.drill-row-click').forEach(function(tr){ tr.addEventListener('click', function(){ renderDrillAds(this.getAttribute('data-adset'), this.getAttribute('data-adname')); }); });
     }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
   }
@@ -3577,8 +3602,11 @@ html,body{background:var(--ub-bg)!important}
     if (p) { since = p.since; until = p.until; } else { var _t=new Date(Date.now()-3*3600000); until=_t.toISOString().slice(0,10); since=new Date(Date.now()-3*3600000-365*86400000).toISOString().slice(0,10); }
     var vtP = pu ? fetch(pu + '/vturbic?since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
     var pbP = pu ? fetch(pu + '/pbbreak?camp=' + encodeURIComponent(c.id) + '&since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
-    Promise.all([fjRetry(url), vtP, pbP]).then(function(res){
+    /* status dos anúncios DESTE conjunto (p/ o toggle pausar/ativar) */
+    var stP = fjRetry(API + '/' + adsetId + '/ads?fields=id,effective_status&limit=300&access_token=' + c._tk).catch(function(){return {};});
+    Promise.all([fjRetry(url), vtP, pbP, stP]).then(function(res){
       var d = res[0]||{}, byAd = (res[1]&&res[1].byAd)||{}, pbAd = (res[2]&&res[2].byAd)||{};
+      var stMap = {}; (((res[3]&&res[3].data))||[]).forEach(function(a){ stMap[String(a.id)] = (a.effective_status||'').toUpperCase(); });
       if (d && d.error) { box.innerHTML = '<div class="ld" style="color:#cf222e">Erro da Meta: ' + (d.error.message||'') + '</div>'; return; }
       var rows = ((d && d.data)||[]).filter(function(r){ return String(r.adset_id) === String(adsetId); });
       if (!rows.length) { box.innerHTML = '<div class="drill-sec">Sem anúncios com dados neste conjunto no período.</div>'; return; }
@@ -3587,15 +3615,21 @@ html,body{background:var(--ub-bg)!important}
         var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
         var vt = byAd[String(r.ad_id)]; var ic = (vt && vt.clicks) ? vt.clicks : 0;
         var pv = pbAd[String(r.ad_id)] || { sales:0, revenue:0 };
+        var st = stMap[String(r.ad_id)] || '';
+        var active = st==='ACTIVE';
+        var stTxt = st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">' + ({PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'}[st]||st) + '</span>' : '&mdash;');
+        var tgl = (st && st!=='DISAPPROVED' && st!=='WITH_ISSUES') ? drillSwitch('ad', r.ad_id, active) : '';
         return '<tr><td style="font-weight:600;color:var(--ub-ink);max-width:240px;white-space:normal">' + escD(r.ad_name||'(sem nome)') + '</td>'
+          + '<td><span style="display:inline-flex;align-items:center;gap:8px">' + tgl + stTxt + '</span></td>'
           + '<td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td>'
           + '<td' + (ic>0?' style="font-weight:600"':'') + '>' + ic.toLocaleString('pt-BR') + '</td>'
           + '<td' + (pv.sales>0?' style="color:#1a7f37;font-weight:600"':'') + '>' + (pv.sales||0) + '</td>'
           + '<td' + (pv.revenue>0?' style="color:#1a7f37"':'') + '>' + (pv.revenue>0?fmtUSD(pv.revenue):'&mdash;') + '</td>'
           + '<td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td></tr>';
       }).join('');
-      box.innerHTML = '<div class="drill-sec">' + rows.length + ' anúncio(s) &middot; IC = clique no botão (VTurb) &middot; Vendas/Fat. = postback</div>'
-        + '<div class="tbl-wrap"><table><thead><tr><th>Anúncio</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>IC</th><th>Vendas</th><th>Fat.</th><th>CPC</th><th>CTR</th></tr></thead><tbody>' + body + '</tbody></table></div>';
+      box.innerHTML = '<div class="drill-sec">' + rows.length + ' anúncio(s) &middot; use o botão de status p/ pausar/ativar &middot; IC = clique no botão (VTurb) &middot; Vendas/Fat. = postback</div>'
+        + '<div class="tbl-wrap"><table><thead><tr><th>Anúncio</th><th>Status</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>IC</th><th>Vendas</th><th>Fat.</th><th>CPC</th><th>CTR</th></tr></thead><tbody>' + body + '</tbody></table></div>';
+      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(ev){ ev.stopPropagation(); drillToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
     }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
   }
 
@@ -5051,9 +5085,17 @@ html,body{background:var(--ub-bg)!important}
     function setUnread(n){ try { localStorage.setItem(LS_UNREAD, String(n)); } catch(e){} setBadge(); }
     function setBadge(){ var b=document.getElementById('notifBadge'); if(!b)return; var n=getUnread(); b.textContent=n; b.style.display=n>0?'inline-block':'none'; }
     function fmtMoney(v){ try { return 'US$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); } catch(e){ return 'US$ '+v; } }
-    /* "Ká-ching" de caixa registradora — sintetizado (Web Audio), sem arquivo/áudio externo:
-       gaveta mecânica (ruído + thud grave) + 2 sinos metálicos inarmônicos (cha-CHING). */
+    /* Som de venda = mp3 de caixa registradora (cash.mp3) com o app ABERTO. Se o arquivo faltar
+       ou o navegador bloquear, cai no sintetizado (playCashSynth). O push com app FECHADO usa o som do sistema. */
+    var saleAudio=null;
+    function getSaleAudio(){ if(!saleAudio){ try{ saleAudio=new Audio('cash.mp3'); saleAudio.preload='auto'; }catch(e){ saleAudio=null; } } return saleAudio; }
     function playCash(){
+      var a=getSaleAudio();
+      if(a){ try{ a.currentTime=0; var pr=a.play(); if(pr&&pr.catch) pr.catch(function(){ playCashSynth(); }); return; }catch(e){} }
+      playCashSynth();
+    }
+    /* Fallback sintetizado (Web Audio): gaveta mecânica + 2 sinos inarmônicos (cha-CHING). */
+    function playCashSynth(){
       try {
         audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
         if (audioCtx.state==='suspended') audioCtx.resume();
@@ -5103,7 +5145,7 @@ html,body{background:var(--ub-bg)!important}
       var list=getList();
       if(!list.length){ el.innerHTML='<div style="color:var(--ub-mut);font-size:13px;padding:14px 0">Nenhuma venda ainda. Quando cair uma venda, aparece aqui com som 💰.</div>'; return; }
       el.innerHTML=list.map(function(x){
-        var d=new Date(x.t); var hh=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+        var d=new Date(x.t); var hh=d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
         return '<div style="display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--ub-line2)">'
           +'<div style="width:38px;height:38px;border-radius:10px;background:var(--ub-green-soft);color:var(--ub-green-d);display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 auto">💰</div>'
           +'<div style="flex:1"><div style="font-weight:700;font-size:13.5px">'+(x.title||'Nova venda')+'</div><div style="font-size:12px;color:var(--ub-ink2)">'+(x.body||'')+'</div></div>'
