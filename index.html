@@ -661,6 +661,7 @@ html,body{background:var(--ub-bg)!important}
   var RT_API = 'https://api.redtrack.io';
   var allData = [];
   var cboData = [];
+  var cboLoading = false, cboLoaded = false; /* controle de auto-load do Dashboard/Campanhas */
   var utmData = {};
   var curF = 'all';
   var curAcctF = 'all';
@@ -1842,6 +1843,8 @@ html,body{background:var(--ub-bg)!important}
   function loadCBO() {
     var tks = getTks();
     if (!tks.length) { alert('Configure um token primeiro em Tokens.'); return; }
+    if (cboLoading) return; /* evita cargas sobrepostas (boot + aba + timer + auto) */
+    cboLoading = true;
     var spinEl = document.getElementById('spinCBO');
     if (spinEl) spinEl.style.display = 'inline-block';
     document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Buscando contas ativas...</td></tr>';
@@ -1862,7 +1865,7 @@ html,body{background:var(--ub-bg)!important}
         var sp = 0; try { sp = (a.insights && a.insights.data && a.insights.data[0]) ? (parseFloat(a.insights.data[0].spend) || 0) : 0; } catch(e){}
         a._sp7d = sp; return (sp > 0 || a.account_status === 1) && acctAllowed(a); /* conta c/ gasto 7d OU ATIVA (p/ pegar campanha ativa de conta nova/parada que não gastou ainda) */
       });
-      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; return; }
+      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo(); return; }
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
       var camps = [];
       var idx = 0;
@@ -1916,6 +1919,7 @@ html,body{background:var(--ub-bg)!important}
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
       if (spinEl) spinEl.style.display='none';
       var _s2=document.getElementById('spinResumo'); if(_s2)_s2.style.display='none';
+      cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
     });
   }
 
@@ -1924,6 +1928,7 @@ html,body{background:var(--ub-bg)!important}
       document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
       var spinEl = document.getElementById('spinCBO'); if (spinEl) spinEl.style.display='none';
       var _s3=document.getElementById('spinResumo'); if(_s3)_s3.style.display='none';
+      cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
       return Promise.resolve();
     }
     var isLifetime = (cboPeriod === 'lifetime');
@@ -3263,6 +3268,7 @@ html,body{background:var(--ub-bg)!important}
     bindSaleTips();
     /* (Barra de diagnostico do RedTrack/Humor removida da tela a pedido.) */
     applyCboFilters();
+    cboLoading = false; cboLoaded = true;
     var spR = document.getElementById('spinResumo'); if (spR) spR.style.display = 'none';
     renderResumo();
   }
@@ -3276,14 +3282,15 @@ html,body{background:var(--ub-bg)!important}
     /* --- Cards principais: soma TODAS as campanhas carregadas (não respeita filtro da aba CBO) --- */
     if (!cboData.length) {
       var noTk = !(getTks() && getTks().length);
+      var msg;
+      if (noTk) msg = 'Configure um <b>token</b> em &#9881; Tokens para ver o resumo.';
+      else if (!cboLoaded) msg = '<span class="spin"></span> Carregando faturamento, gasto, lucro, vendas e IC&hellip;';
+      else msg = 'Nenhuma campanha encontrada no período.';
       mEl.innerHTML = '<div class="card udb-panel" style="grid-column:1/-1;text-align:center;padding:30px 20px">'
-        + '<div style="font-size:14px;color:var(--ub-ink2);margin-bottom:14px">'
-        + (noTk ? 'Configure um <b>token</b> em &#9881; Tokens para ver o resumo.' : 'Clique em <b>Atualizar</b> para carregar faturamento, gasto, lucro, vendas e IC.')
-        + '</div>'
-        + (noTk ? '' : '<button class="btn btn-blue" id="btnLoadResumo2">&#8635; Carregar dados</button>')
-        + '</div>';
-      var b2 = document.getElementById('btnLoadResumo2'); if (b2) b2.addEventListener('click', function(){ loadCBO(); });
-      document.getElementById('resumoTopBody').innerHTML = '<tr><td colspan="7" class="ld">Sem dados ainda.</td></tr>';
+        + '<div style="font-size:14px;color:var(--ub-ink2)">' + msg + '</div></div>';
+      /* abre direto: se tem token e ainda não carregou, dispara sozinho (sem botão). */
+      if (!noTk && !cboLoaded && !cboLoading) loadCBO();
+      document.getElementById('resumoTopBody').innerHTML = '<tr><td colspan="7" class="ld">' + (noTk ? 'Configure o token.' : (!cboLoaded ? 'Carregando&hellip;' : 'Sem dados no período.')) + '</td></tr>';
     } else {
       var T = { sp:0, fat:0, lucro:0, sales:0, ics:0 };
       cboData.forEach(function(c){
