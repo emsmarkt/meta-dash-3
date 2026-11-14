@@ -268,7 +268,26 @@ html,body{background:var(--ub-bg)!important}
 #mdb select.udb-ctrl{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235e5873' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:32px}
 #mdb .udb-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--ub-line2)}
 /* ---- MOBILE (app) ---- */
+/* ===== Cards de campanha (mobile, estilo UTMify) — escondidos no desktop ===== */
+#mdb .cbo-cards{display:none}
+#mdb .cbo-card{background:#fff;border:1px solid var(--ub-line);border-radius:14px;padding:13px 14px 12px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,20,43,.05)}
+#mdb .cbo-card .cc-top{display:flex;align-items:flex-start;gap:10px}
+#mdb .cbo-card .cc-sel{width:20px;height:20px;flex:0 0 auto;margin-top:2px;accent-color:var(--ub-blue)}
+#mdb .cbo-card .cc-mid{flex:1;min-width:0}
+#mdb .cbo-card .cc-name{font-size:14.5px;font-weight:700;color:var(--ub-ink);line-height:1.25;word-break:break-word}
+#mdb .cbo-card .cc-sub{font-size:11px;color:var(--ub-mut);margin-top:2px}
+#mdb .cbo-card .cc-roas{flex:0 0 auto;text-align:right;line-height:1}
+#mdb .cbo-card .cc-roas b{font-size:19px;font-weight:800;display:block}
+#mdb .cbo-card .cc-roas span{font-size:9.5px;color:var(--ub-mut);letter-spacing:.08em;font-weight:700}
+#mdb .cbo-card .cc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--ub-line2);border:1px solid var(--ub-line2);border-radius:10px;overflow:hidden;margin-top:12px}
+#mdb .cbo-card .cc-cell{background:#fafafb;padding:9px 10px}
+#mdb .cbo-card .cc-cell .k{font-size:9.5px;color:var(--ub-mut);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+#mdb .cbo-card .cc-cell .v{font-size:14px;font-weight:700;color:var(--ub-ink);margin-top:3px}
+#mdb .cbo-card .cc-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
+#mdb .cbo-card .cc-foot .cc-edit{flex:1;text-align:center;font-size:12.5px;font-weight:700;color:var(--ub-blue);background:#eef3ff;border:1px solid #d4e2ff;border-radius:9px;padding:9px;cursor:pointer}
 @media(max-width:860px){
+  #mdb .cbo-table{display:none}
+  #mdb .cbo-cards{display:block}
   #mdb .udb-sidebar{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.2);width:272px;flex-basis:272px}
   #mdb.udb-drawer .udb-sidebar{transform:translateX(0)}
   #mdb.udb-drawer .udb-backdrop{display:block}
@@ -404,7 +423,8 @@ html,body{background:var(--ub-bg)!important}
         <button class="btn" id="cboSelClear">Limpar seleção</button>
       </div>
     </div>
-    <div class="tbl-wrap">
+    <div id="cboCards" class="cbo-cards"></div>
+    <div class="tbl-wrap cbo-table">
       <table>
         <thead>
           <tr>
@@ -423,8 +443,8 @@ html,body{background:var(--ub-bg)!important}
             <th style="cursor:pointer;user-select:none" data-sort="roas" id="thRoas">ROAS &#8645;</th>
             <th title="Lucro / Faturamento">Margem</th>
             <th title="Retorno sobre investimento">ROI</th>
-            <th title="Initiate Checkout (quantidade)">IC</th>
-            <th title="Custo por IC">CPI</th>
+            <th title="IC = clique no botão da VSL (VTurb), somado por anúncio da campanha">IC</th>
+            <th title="Custo por IC (gasto / IC da VTurb)">CPI</th>
             <th title="Conversão Checkout = Vendas / IC">CC</th>
             <th title="CTR de link (%)">CTR</th>
             <th title="Custo por clique no link">CPC</th>
@@ -740,6 +760,14 @@ html,body{background:var(--ub-bg)!important}
     var cv = c && c._conv; if (!cv) return 0;
     if (cv.revenue > 0) return cv.revenue;
     if (cv.src === 'rt' && (cv.sales || 0) > 0) return cv.sales * RULES.commission;
+    return 0;
+  }
+  /* IC (InitiateCheckout) = evento do CHECKOUT/order form, lido DIRETO do pixel do Meta (actions).
+     Substitui a VTurb como fonte do IC. 'omni_initiated_checkout' é o consolidado (web+app). */
+  function metaIC(actions) {
+    if (!Array.isArray(actions)) return 0;
+    var pref = ['omni_initiated_checkout','initiate_checkout','offsite_conversion.fb_pixel_initiate_checkout'];
+    for (var ti=0; ti<pref.length; ti++) { for (var ai=0; ai<actions.length; ai++) { if (actions[ai] && actions[ai].action_type===pref[ti]) return parseInt(actions[ai].value)||0; } }
     return 0;
   }
   /* URL do Worker (Cloudflare) FIXA no codigo — igual p/ todos que acessam (nao pede a cada um).
@@ -1459,12 +1487,21 @@ html,body{background:var(--ub-bg)!important}
     var u = getPbUrl(); if (!u) return Promise.resolve();
     var p = periodDates(), since, until;
     if (p) { since = p.since; until = p.until; } else { var _t = new Date(Date.now() - 3*3600000); until = _t.toISOString().slice(0,10); var _s = new Date(Date.now() - 3*3600000 - 365*86400000); since = _s.toISOString().slice(0,10); }
-    return fetch(u + '/pbsales?since=' + since + '&until=' + until, { headers: { 'Accept':'application/json' } })
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        var by = (d && d.byCamp) || {};
-        camps.forEach(function(c){ var v = by[String(c.id)]; if (v && (v.sales || v.revenue)) c._conv = { sales: v.sales||0, ic: 0, revenue: v.revenue||0, src: 'pb' }; });
-      }).catch(function(){});
+    /* VENDAS = postback (/pbsales). IC = clique no botão da VTURB (/vturbic), por AD, somado na campanha. */
+    var salesP = fetch(u + '/pbsales?since=' + since + '&until=' + until, { headers: { 'Accept':'application/json' } }).then(function(r){ return r.json(); }).catch(function(){ return {}; });
+    var vtP = fetch(u + '/vturbic?since=' + since + '&until=' + until, { headers: { 'Accept':'application/json' } }).then(function(r){ return r.json(); }).catch(function(){ return {}; });
+    return Promise.all([salesP, vtP]).then(function(res){
+      var by = (res[0] && res[0].byCamp) || {};
+      var byAd = (res[1] && res[1].byAd) || {};
+      camps.forEach(function(c){
+        var v = by[String(c.id)] || null;
+        var sales = v ? (v.sales||0) : 0, rev = v ? (v.revenue||0) : 0;
+        /* IC = soma dos cliques no botão (VTurb) dos anúncios desta campanha. Associa AD -> campanha pelo _adIds. */
+        var icVt = 0, ids = c._adIds || [];
+        for (var k=0; k<ids.length; k++){ var a = byAd[ids[k]]; if (a && a.clicks) icVt += a.clicks; }
+        if (sales || rev || icVt) c._conv = { sales: sales, ic: icVt, revenue: rev, src: 'pb', icSrc: icVt>0?'vturb':null };
+      });
+    }).catch(function(){});
   }
   function fetchConversions(camps) {
     camps.forEach(function(c){ c._conv = null; });
@@ -1913,7 +1950,7 @@ html,body{background:var(--ub-bg)!important}
       var _campIds = (gr.camps || []).map(function(c){ return String(c.id); });
       var _campFilter = _campIds.length ? ('&filtering=' + encodeURIComponent(JSON.stringify([{ field: 'campaign.id', operator: 'IN', value: _campIds }]))) : '';
       var adsetsUrl = API+'/'+acct+'/adsets?fields=id,name,campaign_id,effective_status,bid_amount,lifetime_spend_cap'+_campFilter+'&limit=300&access_token='+tk;
-      var adsUrl = API+'/'+acct+'/ads?fields=campaign_id,effective_status'+_campFilter+'&limit=500&access_token='+tk;
+      var adsUrl = API+'/'+acct+'/ads?fields=id,campaign_id,effective_status'+_campFilter+'&limit=500&access_token='+tk;
       var calls = isLifetime
         ? [fjPagedR(lifeUrl), fjPagedR(adsetsUrl), fjPagedR(adsUrl)]
         : [fjPagedR(lifeUrl), fjPagedR(periodUrl), fjPagedR(adsetsUrl), fjPagedR(adsUrl)];
@@ -1940,6 +1977,7 @@ html,body{background:var(--ub-bg)!important}
             c._ctr = lr ? (parseFloat(lr.inline_link_click_ctr) || 0) : 0;
             c._impr = lr ? (parseInt(lr.impressions) || 0) : 0;
             c._freq = lr ? (parseFloat(lr.frequency) || 0) : 0;
+            c._icMeta = lr ? metaIC(lr.actions) : 0;
           } else if (useHourly) {
             var agg = periodMap[c.id] || { spend:0, clicks:0, linkClicks:0, impressions:0 };
             c._periodSpend = agg.spend; c._clicks = agg.clicks; c._linkClicks = agg.linkClicks;
@@ -1947,6 +1985,7 @@ html,body{background:var(--ub-bg)!important}
             c._ctr = agg.impressions > 0 ? (agg.linkClicks / agg.impressions * 100) : 0;
             c._impr = agg.impressions || 0;
             c._freq = 0;
+            c._icMeta = 0; /* breakdown por hora não traz actions — IC fica sem fonte nesse caso raro (conta fora de UTC-3 em 1 dia) */
           } else {
             var p = periodMap[c.id];
             c._periodSpend = p ? (parseFloat(p.spend) || 0) : 0;
@@ -1956,6 +1995,7 @@ html,body{background:var(--ub-bg)!important}
             c._ctr = p ? (parseFloat(p.inline_link_click_ctr) || 0) : 0;
             c._impr = p ? (parseInt(p.impressions) || 0) : 0;
             c._freq = p ? (parseFloat(p.frequency) || 0) : 0;
+            c._icMeta = p ? metaIC(p.actions) : 0;
           }
           var adsets = adsetsByCid[c.id] || [];
           var ads = adsByCid[c.id] || [];
@@ -1980,6 +2020,8 @@ html,body{background:var(--ub-bg)!important}
           var sumCaps = 0, anyCap = false;
           adsets.forEach(function(s) { var life = 0; if (s.insights && s.insights.data && s.insights.data[0]) life = parseFloat(s.insights.data[0].spend) || 0; s._life = life; var cap = (s.lifetime_spend_cap != null) ? +s.lifetime_spend_cap : 0; if (cap > 0) { anyCap = true; sumCaps += cap / 100; } });
           c._adsets = adsets;
+          /* IDs dos anúncios desta campanha -> usados p/ somar o IC (clique no botão) da VTurb por AD. */
+          c._adIds = ads.map(function(a){ return String(a.id || ''); }).filter(Boolean);
           recomputeLifeCap(c); /* LIMITADA (vitalícia) = lê o lifetime_spend_cap real dos conjuntos ativos */
         });
       }).catch(function() {
@@ -2006,6 +2048,9 @@ html,body{background:var(--ub-bg)!important}
           camps.forEach(function(c) {
             c._metaSpend = c._periodSpend; /* = gasto do Meta (ja setado no batch) */
             c._spendSrc = 'meta';
+            /* IC NÃO vem do Meta (Emerson: "não vai vir"). IC = evento de checkout da PLATAFORMA de vendas,
+               via postback do worker (c._conv.ic de /pbsales). Enquanto a plataforma não dispara o evento de
+               "order form visit"/checkout, IC fica 0. Ver worker /pb (event=checkout) + /pbsales. */
           });
           /* Estado compartilhado de regras aplicadas. (Aviso de 3 dias removido.) */
           return Promise.all([
@@ -3372,7 +3417,7 @@ html,body{background:var(--ub-bg)!important}
     var q = srchEl ? srchEl.value.toLowerCase().trim() : '';
     var accSel = document.getElementById('cboAcctSel');
     var accVal = accSel ? accSel.value : '';
-    var vis = [];
+    var vis = [], visIdx = [];
     document.querySelectorAll('#cboTbody tr[data-name]').forEach(function(tr) {
       var nm = tr.getAttribute('data-name') || '';
       var st = tr.getAttribute('data-status') || '';
@@ -3387,12 +3432,69 @@ html,body{background:var(--ub-bg)!important}
       else okStatus = (st === cboStatus);
       var ok = okName && okStatus && okAcct;
       tr.style.display = ok ? '' : 'none';
-      if (ok) { var idx = parseInt(tr.getAttribute('data-cbo')); if (!isNaN(idx) && cboData[idx]) vis.push(cboData[idx]); }
+      if (ok) { var idx = parseInt(tr.getAttribute('data-cbo')); if (!isNaN(idx) && cboData[idx]) { vis.push(cboData[idx]); visIdx.push(idx); } }
     });
     /* TOTAL passa a somar SO o que esta visivel no filtro. */
     var tot = document.getElementById('cboTotals');
     if (tot) tot.outerHTML = cboTotalsHtml(vis);
     renderCboMetrics(vis);
+    renderCboCards(visIdx); /* lista em cards no mobile — respeita o mesmo filtro */
+  }
+
+  /* ===== LISTA EM CARDS (mobile, estilo UTMify) — mesmos dados/handlers da tabela ===== */
+  function renderCboCards(idxList) {
+    var box = document.getElementById('cboCards'); if (!box) return;
+    var hasC = hasConv();
+    if (!idxList || !idxList.length) { box.innerHTML = '<div class="ld" style="padding:30px">Nenhuma campanha.</div>'; return; }
+    function cell(k, v) { return '<div class="cc-cell"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>'; }
+    box.innerHTML = idxList.map(function(i) {
+      var c = cboData[i]; if (!c) return '';
+      var active = (c.status || '').toUpperCase() === 'ACTIVE';
+      var sp = c._periodSpend || 0;
+      var sales = (hasC && c._conv) ? (c._conv.sales || 0) : 0;
+      var fat = campFat(c), roas = sp > 0 ? fat/sp : 0, lucro = fat - sp, marg = fat > 0 ? (lucro/fat*100) : 0;
+      var cpa = (sales > 0 && sp > 0) ? fmtUSD(sp/sales) : 'N/A';
+      var roasCls = roas>=1.5 ? 'd-good' : (roas>=1.3 ? 'd-warn' : (roas>0 ? 'd-bad' : ''));
+      var lucroCls = lucro>=0 ? 'd-good' : 'd-bad';
+      var name = (c.name || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      var gasto = (c._metaSpend > 0) ? fmtUSD(c._metaSpend) : (sp > 0 ? fmtUSD(sp) : '$0.00');
+      var actSets = (c._adsets || []).filter(function(s){ return (s.effective_status||'').toUpperCase()==='ACTIVE'; });
+      var bids = actSets.map(function(s){ return (s.bid_amount!=null && +s.bid_amount>0) ? +s.bid_amount : null; }).filter(function(v){ return v!=null; });
+      var bidTxt = bids.length ? ('Bid '+fmtUSD(Math.max.apply(null,bids)/100)) : 'Sem Bid Cap';
+      var swBg = active ? 'var(--ub-blue)' : '#cfd3dc', knob = active ? '21px' : '3px';
+      return '<div class="cbo-card">'
+        + '<div class="cc-top">'
+        +   '<input type="checkbox" class="cbo-sel cc-sel" data-i="'+i+'">'
+        +   '<button class="cc-tgl" data-tgl="'+i+'" title="'+(active?'Pausar':'Ativar')+'" style="width:44px;height:26px;border-radius:14px;border:none;cursor:pointer;position:relative;background:'+swBg+'"><span style="position:absolute;top:3px;left:'+knob+';width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s"></span></button>'
+        +   '<div class="cc-mid"><div class="cc-name">'+name+'</div><div class="cc-sub">#'+c.id+' &middot; '+bidTxt+'</div></div>'
+        +   '<div class="cc-roas"><b class="'+(roasCls||'')+'">'+((hasC&&roas>0)?roas.toFixed(2).replace('.',','):'0.00')+'</b><span>ROAS</span></div>'
+        + '</div>'
+        + '<div class="cc-grid">'
+        +   cell('Gastos', gasto)
+        +   cell('Faturamento', (hasC&&fat>0)?fmtUSD(fat):'$0.00')
+        +   cell('Vendas', hasC?sales:'&mdash;')
+        +   cell('Lucro', '<span class="'+lucroCls+'">'+(hasC?fmtUSD(lucro):'&mdash;')+'</span>')
+        +   cell('CPA', hasC?cpa:'&mdash;')
+        +   cell('Margem', (hasC&&fat>0)?Math.round(marg)+'%':'N/A')
+        + '</div>'
+        + '<div class="cc-foot"><div class="cc-edit" data-edit="'+i+'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver detalhes</div></div>'
+        + '</div>';
+    }).join('');
+    box.querySelectorAll('.cc-tgl').forEach(function(b){ b.addEventListener('click', function(){ toggleCampaign(parseInt(this.getAttribute('data-tgl'))); }); });
+    box.querySelectorAll('.cc-edit').forEach(function(b){ b.addEventListener('click', function(){ openCboDetail(parseInt(this.getAttribute('data-edit'))); }); });
+    box.querySelectorAll('.cbo-sel').forEach(function(ch){ ch.addEventListener('change', function(){ if (window._updateCboSelBar) window._updateCboSelBar(); }); });
+  }
+
+  /* Renomeia a campanha no Meta (pedido do Emerson). Escreve name= via postForm. */
+  function renameCampaign(i) {
+    var camp = cboData[i]; if (!camp) return;
+    var novo = prompt('Novo nome da campanha:', camp.name || '');
+    if (novo == null) return;
+    novo = novo.trim();
+    if (!novo || novo === camp.name) return;
+    withTokenFallback(camp._tk, function(tk){ return postForm(camp.id, tk, { name: novo }); })
+      .then(function(){ camp.name = novo; if (typeof notifyOk === 'function') notifyOk('Campanha renomeada', novo); renderCBO(); })
+      .catch(function(e){ var msg = (e && e.message) ? e.message : String(e); if (typeof notifyErr === 'function') notifyErr('Erro ao renomear', msg); else alert('Erro ao renomear: ' + msg); });
   }
 
   /* ── Posicionamento robusto do tooltip de vendas (Problema 1) ──
@@ -3632,6 +3734,8 @@ html,body{background:var(--ub-bg)!important}
     document.getElementById('cboDetAcct').innerHTML = '<span class="badge '+st.cls+'">'+st.txt+'</span> &middot; '+esc(camp._accountName);
 
     var body = ''
+      + '<div class="det-row" style="align-items:center"><span class="det-k">Nome da campanha</span>'
+      +   '<span class="det-v"><button class="save-btn" id="detRename" style="padding:5px 12px;background:#fff;color:var(--ub-blue);border:1px solid var(--ub-blue)">&#9998; Renomear</button></span></div>'
       + row('Gasto (periodo)', sp > 0 ? fmtUSD(sp) : '---')
       + row('Vendas', hasC ? sales : '<span style="color:#656d76">sem token</span>')
       + row('CPA', hasC ? cpaTxt : '---')
@@ -3723,6 +3827,8 @@ html,body{background:var(--ub-bg)!important}
 
     document.getElementById('cboDetBody').innerHTML = body;
 
+    var bRename = document.getElementById('detRename');
+    if (bRename) bRename.addEventListener('click', function(){ closeCboDetail(); renameCampaign(i); });
     var bTgl = document.getElementById('detTgl');
     if (bTgl) bTgl.addEventListener('click', function(){ closeCboDetail(); toggleCampaign(i); });
     var bApply = document.getElementById('detApply');

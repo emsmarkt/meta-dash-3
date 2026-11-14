@@ -1,0 +1,16 @@
+{
+  "name": "Scalefy",
+  "short_name": "Scalefy",
+  "description": "Scalefy — painel de campanhas, vendas, ROAS e alertas em tempo real.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f8f8f8",
+  "theme_color": "#005AE3",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
