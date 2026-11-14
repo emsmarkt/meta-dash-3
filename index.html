@@ -472,8 +472,6 @@ html,body{background:var(--ub-bg)!important}
             <th title="Custo por mil impressões">CPM</th>
             <th>Impress&otilde;es</th>
             <th title="Cliques no link">Cliques</th>
-            <th title="Faturamento / Vendas">ARPU</th>
-            <th title="Frequência média">Freq.</th>
             <th title="ID da campanha">ID Campanha</th>
             <th title="Limite de lance (bid cap) dos conjuntos ativos — estrategia BID" style="border-left:1px solid var(--ub-line)">Limite lance</th>
             <th title="Limite de GASTO por dia: digite quanto rodar HOJE (teto = gasto atual + valor).">Limite gasto</th>
@@ -486,7 +484,7 @@ html,body{background:var(--ub-bg)!important}
             <th>Aplicar</th>
           </tr>
         </thead>
-        <tbody id="cboTbody"><tr><td colspan="35" class="ld"><span class="spin"></span> Carregando campanhas&hellip;</td></tr></tbody>
+        <tbody id="cboTbody"><tr><td colspan="33" class="ld"><span class="spin"></span> Carregando campanhas&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -1847,7 +1845,7 @@ html,body{background:var(--ub-bg)!important}
     cboLoading = true;
     var spinEl = document.getElementById('spinCBO');
     if (spinEl) spinEl.style.display = 'inline-block';
-    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Buscando contas ativas...</td></tr>';
+    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Buscando contas ativas...</td></tr>';
     var map = {};
     var chain = fetchFxLive().catch(function(){}); /* puxa a cotacao USD/BRL ao vivo ANTES de converter os custos */
     tks.forEach(function(tk) {
@@ -1865,8 +1863,8 @@ html,body{background:var(--ub-bg)!important}
         var sp = 0; try { sp = (a.insights && a.insights.data && a.insights.data[0]) ? (parseFloat(a.insights.data[0].spend) || 0) : 0; } catch(e){}
         a._sp7d = sp; return (sp > 0 || a.account_status === 1) && acctAllowed(a); /* conta c/ gasto 7d OU ATIVA (p/ pegar campanha ativa de conta nova/parada que não gastou ainda) */
       });
-      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo(); return; }
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
+      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo(); return; }
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
       var camps = [];
       var idx = 0;
       function nextBatch() {
@@ -1916,7 +1914,7 @@ html,body{background:var(--ub-bg)!important}
       }
       return nextBatch();
     }).catch(function(e) {
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
       if (spinEl) spinEl.style.display='none';
       var _s2=document.getElementById('spinResumo'); if(_s2)_s2.style.display='none';
       cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
@@ -1925,7 +1923,7 @@ html,body{background:var(--ub-bg)!important}
 
   function fetchCBOSpend(camps) {
     if (!camps.length) {
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
       var spinEl = document.getElementById('spinCBO'); if (spinEl) spinEl.style.display='none';
       var _s3=document.getElementById('spinResumo'); if(_s3)_s3.style.display='none';
       cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
@@ -1951,7 +1949,7 @@ html,body{background:var(--ub-bg)!important}
        so as horas que caem no dia do Brasil (senao a Meta le o time_range no fuso da conta e desalinha). */
     var singleDay = (_pd && _pd.since === _pd.until) ? _pd.since : null;
     var hourlyWide = singleDay ? encodeURIComponent(JSON.stringify({ since: shiftDay(singleDay, -1), until: shiftDay(singleDay, 1) })) : null;
-    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld"><span class="spin"></span>Carregando metricas de '+camps.length+' campanhas CBO ('+periodLabel()+')...</td></tr>';
+    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Carregando metricas de '+camps.length+' campanhas CBO ('+periodLabel()+')...</td></tr>';
     /* ===== OTIMIZACAO RATE LIMIT (level=campaign por CONTA) =====
        Em vez de 4 chamadas POR CAMPANHA, puxa por CONTA: gasto do periodo + gasto vitalicio + conjuntos +
        anuncios TODOS no nivel da conta (level=campaign / campaign_id), 1 chamada de cada por conta (paginada).
@@ -2963,7 +2961,7 @@ html,body{background:var(--ub-bg)!important}
     /* Barra de diagnostico do RedTrack/Humor OCULTA (a pedido) — fica sempre escondida. */
     var diagEl = document.getElementById('rtDiag');
     if (diagEl) diagEl.style.display = 'none';
-    if (!cboData.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="35" class="ld">Nenhuma campanha CBO encontrada.</td></tr>'; return; }
+    if (!cboData.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld">Nenhuma campanha CBO encontrada.</td></tr>'; return; }
     sortCBO();
     var arrow = cboSort.dir === 'asc' ? ' &#9650;' : ' &#9660;';
     var thV = document.getElementById('thVendas'); if (thV) thV.innerHTML = 'Vendas' + (cboSort.key==='sales'?arrow:' &#8645;');
@@ -3198,11 +3196,7 @@ html,body{background:var(--ub-bg)!important}
         '<td style="font-size:12px">'+imprTxt+'</td>' +
         /* 23 Cliques */
         '<td style="font-size:12px">'+clicksNum+'</td>' +
-        /* 24 ARPU */
-        '<td style="font-size:12px">'+arpuTxt+'</td>' +
-        /* 25 Freq. */
-        '<td style="font-size:12px">'+freqTxt+'</td>' +
-        /* 27 ID Campanha */
+        /* ID Campanha */
         '<td style="font-size:12px">'+idTxt+'</td>' +
         /* 28 Limite lance (bid) */
         '<td style="'+bl+'">'+bidCellHtml(camp, i)+'</td>' +
@@ -3433,8 +3427,6 @@ html,body{background:var(--ub-bg)!important}
       '<td>'+tCpm+'</td>' +
       '<td>'+(T.impr>0?T.impr.toLocaleString('pt-BR'):'---')+'</td>' +
       '<td>'+(T.lclk>0?T.lclk.toLocaleString('pt-BR'):'---')+'</td>' +
-      '<td>'+(hasC?tArpu:'---')+'</td>' +
-      '<td></td>' +
       '<td></td>' +
       '<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>' +
       '</tr>';
@@ -3711,7 +3703,7 @@ html,body{background:var(--ub-bg)!important}
     if (arrow) arrow.textContent = '▴';
     var det = document.createElement('tr');
     det.setAttribute('data-detfor', i); det.className = 'cbo-det-row';
-    det.innerHTML = '<td colspan="35" style="background:#f6f8fa;padding:10px 14px;border-bottom:2px solid #d0d7de">'
+    det.innerHTML = '<td colspan="33" style="background:#f6f8fa;padding:10px 14px;border-bottom:2px solid #d0d7de">'
       + '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">'
       +   '<button class="pill on" data-detmode="ad" data-i="'+i+'">Por anúncio</button>'
       +   '<button class="pill" data-detmode="country" data-i="'+i+'">Por país</button>'
