@@ -285,6 +285,20 @@ html,body{background:var(--ub-bg)!important}
 #mdb .cbo-card .cc-cell .v{font-size:14px;font-weight:700;color:var(--ub-ink);margin-top:3px}
 #mdb .cbo-card .cc-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
 #mdb .cbo-card .cc-foot .cc-edit{flex:1;text-align:center;font-size:12.5px;font-weight:700;color:var(--ub-blue);background:#eef3ff;border:1px solid #d4e2ff;border-radius:9px;padding:9px;cursor:pointer}
+#mdb .cbo-card .cc-foot .cc-sets{flex:1;text-align:center;font-size:12.5px;font-weight:700;color:var(--ub-ink2);background:#f3f2f7;border:1px solid var(--ub-line);border-radius:9px;padding:9px;cursor:pointer}
+/* ===== Drill-down Conjuntos -> Anúncios ===== */
+#mdb #cboDrill{display:none}
+#mdb #tab-cbo.drilling #cboDrill{display:block}
+#mdb #tab-cbo.drilling .cbo-cards,#mdb #tab-cbo.drilling .cbo-table,#mdb #tab-cbo.drilling #cboMetrics,#mdb #tab-cbo.drilling > .card.udb-panel{display:none!important}
+#mdb .drill-crumb{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+#mdb .drill-back{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--ub-blue);background:#eef3ff;border:1px solid #d4e2ff;border-radius:9px;padding:8px 13px;cursor:pointer}
+#mdb .drill-path{font-size:14px;color:var(--ub-ink2);font-weight:600}
+#mdb .drill-path b{color:var(--ub-ink)}
+#mdb .drill-path .sep{color:var(--ub-mut);margin:0 7px}
+#mdb .drill-path .lnk{color:var(--ub-blue);cursor:pointer}
+#mdb .drill-sec{font-size:12px;color:var(--ub-mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin:4px 0 10px}
+#mdb .drill-row-click{cursor:pointer}
+#mdb .drill-row-click:hover td{background:#eef3ff!important}
 @media(max-width:860px){
   #mdb .cbo-table{display:none}
   #mdb .cbo-cards{display:block}
@@ -344,7 +358,7 @@ html,body{background:var(--ub-bg)!important}
       <span class="udb-badge" id="resumoPeriodBadge" style="background:#eef3ff;color:var(--ub-blue);border-color:#d4e2ff">Hoje</span>
       <div class="udb-tb">
         <select class="ctrl udb-ctrl" id="resumoPeriodSel" style="width:auto;min-width:150px"><option value="today">Hoje</option><option value="yesterday">Ontem</option><option value="custom">Personalizado</option></select>
-        <button class="btn btn-blue" id="btnLoadResumo"><span id="spinResumo" class="spin" style="display:none"></span>&#8635; Atualizar</button>
+        <span id="spinResumo" class="spin" style="display:none"></span>
       </div>
     </div>
     <div id="resumoCustomRange" style="display:none;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap">
@@ -399,7 +413,7 @@ html,body{background:var(--ub-bg)!important}
           <label id="autoApplyWrap" title="Interruptor LIVE/DRY do robô. LIGADO = o robô APLICA as regras de verdade a cada 5 min (APPLY_MODE=live). DESLIGADO = só simula (dry)." style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ub-ink2);cursor:pointer;user-select:none;padding:7px 11px;border:1px solid var(--ub-inp);border-radius:8px">
             <span class="md-switch"><input type="checkbox" id="autoApplyChk"><span class="md-slider"></span></span> <span id="autoApplyTxt" style="font-weight:600">Robô: —</span>
           </label>
-          <button class="btn btn-blue" id="btnLoadCBO"><span id="spinCBO" class="spin" style="display:none"></span>&#8635; Atualizar</button>
+          <span id="spinCBO" class="spin" style="display:none"></span>
         </div>
       </div>
       <div class="udb-filters">
@@ -423,7 +437,14 @@ html,body{background:var(--ub-bg)!important}
         <button class="btn" id="cboSelClear">Limpar seleção</button>
       </div>
     </div>
-    <div id="cboCards" class="cbo-cards"></div>
+    <div id="cboCards" class="cbo-cards"><div class="ld" style="padding:30px"><span class="spin"></span> Carregando campanhas&hellip;</div></div>
+    <div id="cboDrill">
+      <div class="drill-crumb">
+        <button class="drill-back" id="drillBack"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-3px"><path d="M15 18l-6-6 6-6"/></svg> Campanhas</button>
+        <span class="drill-path" id="drillPath"></span>
+      </div>
+      <div id="drillBody"></div>
+    </div>
     <div class="tbl-wrap cbo-table">
       <table>
         <thead>
@@ -465,7 +486,7 @@ html,body{background:var(--ub-bg)!important}
             <th>Aplicar</th>
           </tr>
         </thead>
-        <tbody id="cboTbody"><tr><td colspan="35" class="ld">Clique em "Atualizar" para carregar as campanhas.</td></tr></tbody>
+        <tbody id="cboTbody"><tr><td colspan="35" class="ld"><span class="spin"></span> Carregando campanhas&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -3477,11 +3498,12 @@ html,body{background:var(--ub-bg)!important}
         +   cell('CPA', hasC?cpa:'&mdash;')
         +   cell('Margem', (hasC&&fat>0)?Math.round(marg)+'%':'N/A')
         + '</div>'
-        + '<div class="cc-foot"><div class="cc-edit" data-edit="'+i+'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver detalhes</div></div>'
+        + '<div class="cc-foot"><div class="cc-sets" data-sets="'+i+'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Conjuntos</div><div class="cc-edit" data-edit="'+i+'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-3px;margin-right:5px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver detalhes</div></div>'
         + '</div>';
     }).join('');
     box.querySelectorAll('.cc-tgl').forEach(function(b){ b.addEventListener('click', function(){ toggleCampaign(parseInt(this.getAttribute('data-tgl'))); }); });
     box.querySelectorAll('.cc-edit').forEach(function(b){ b.addEventListener('click', function(){ openCboDetail(parseInt(this.getAttribute('data-edit'))); }); });
+    box.querySelectorAll('.cc-sets').forEach(function(b){ b.addEventListener('click', function(){ openDrill(parseInt(this.getAttribute('data-sets'))); }); });
     box.querySelectorAll('.cbo-sel').forEach(function(ch){ ch.addEventListener('change', function(){ if (window._updateCboSelBar) window._updateCboSelBar(); }); });
   }
 
@@ -3495,6 +3517,87 @@ html,body{background:var(--ub-bg)!important}
     withTokenFallback(camp._tk, function(tk){ return postForm(camp.id, tk, { name: novo }); })
       .then(function(){ camp.name = novo; if (typeof notifyOk === 'function') notifyOk('Campanha renomeada', novo); renderCBO(); })
       .catch(function(e){ var msg = (e && e.message) ? e.message : String(e); if (typeof notifyErr === 'function') notifyErr('Erro ao renomear', msg); else alert('Erro ao renomear: ' + msg); });
+  }
+
+  /* ===== DRILL-DOWN: Campanha -> Conjuntos -> Anúncios (estilo UTMify) ===== */
+  var _drill = { campIdx: null, adsetId: null, adsetName: '' };
+  function drillRange() { var p = periodDates(); var s, u; if (p) { s = p.since; u = p.until; } else { var d = new Date(); d.setMonth(d.getMonth()-36); s = d.toISOString().slice(0,10); u = new Date().toISOString().slice(0,10); } return 'time_range=' + encodeURIComponent(JSON.stringify({ since: s, until: u })); }
+  function escD(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function openDrill(i) {
+    var c = cboData[i]; if (!c) return;
+    _drill.campIdx = i; _drill.adsetId = null;
+    var pane = document.getElementById('tab-cbo'); if (pane) pane.classList.add('drilling');
+    renderDrillSets();
+    try { document.getElementById('cboDrill').scrollIntoView({ block:'start', behavior:'smooth' }); } catch(e){}
+  }
+  function closeDrill() { var pane = document.getElementById('tab-cbo'); if (pane) pane.classList.remove('drilling'); _drill.campIdx = null; _drill.adsetId = null; }
+  function drillPath() {
+    var c = cboData[_drill.campIdx]; var el = document.getElementById('drillPath'); if (!el || !c) return;
+    var html = '<b>' + escD(c.name) + '</b>';
+    if (_drill.adsetId) html += '<span class="sep">&rsaquo;</span><span class="lnk" id="crumbSets">Conjuntos</span><span class="sep">&rsaquo;</span><b>' + escD(_drill.adsetName) + '</b>';
+    else html += '<span class="sep">&rsaquo;</span><b>Conjuntos</b>';
+    el.innerHTML = html;
+    var cs = document.getElementById('crumbSets'); if (cs) cs.addEventListener('click', function(){ renderDrillSets(); });
+  }
+  function renderDrillSets() {
+    var c = cboData[_drill.campIdx]; if (!c) return;
+    _drill.adsetId = null; _drill.adsetName = ''; drillPath();
+    var box = document.getElementById('drillBody'); if (!box) return;
+    box.innerHTML = '<div class="ld"><span class="spin"></span> Carregando conjuntos&hellip;</div>';
+    var url = API + '/' + c.id + '/insights?level=adset&fields=adset_id,adset_name,spend,impressions,inline_link_clicks,cpc,ctr&' + drillRange() + '&limit=200&access_token=' + c._tk;
+    fjRetry(url).then(function(d){
+      if (d && d.error) { box.innerHTML = '<div class="ld" style="color:#cf222e">Erro da Meta: ' + (d.error.message||'') + '</div>'; return; }
+      var rows = (d && d.data) || [];
+      var byId = {}; (c._adsets || []).forEach(function(s){ byId[String(s.id)] = s; });
+      var seen = {}; rows.forEach(function(r){ seen[String(r.adset_id)] = 1; });
+      (c._adsets || []).forEach(function(s){ var st=(s.effective_status||'').toUpperCase(); if (!seen[String(s.id)] && st!=='ARCHIVED' && st!=='DELETED') rows.push({ adset_id:s.id, adset_name:s.name, spend:0, impressions:0, inline_link_clicks:0 }); });
+      if (!rows.length) { box.innerHTML = '<div class="ld">Nenhum conjunto encontrado.</div>'; return; }
+      rows.sort(function(a,b){ return (parseFloat(b.spend)||0) - (parseFloat(a.spend)||0); });
+      var body = rows.map(function(r){
+        var s = byId[String(r.adset_id)] || {}; var st = (s.effective_status||'').toUpperCase();
+        var stTxt = st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">' + ({PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'}[st]||st) + '</span>' : '&mdash;');
+        var bid = (s.bid_amount!=null && +s.bid_amount>0) ? fmtUSD(+s.bid_amount/100) : '&mdash;';
+        var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
+        return '<tr class="drill-row-click" data-adset="' + r.adset_id + '" data-adname="' + escD(r.adset_name).replace(/"/g,'&quot;') + '">'
+          + '<td style="font-weight:600;color:var(--ub-ink);max-width:260px;white-space:normal">' + escD(r.adset_name||'(sem nome)') + '</td>'
+          + '<td>' + stTxt + '</td><td>' + bid + '</td><td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td><td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td>'
+          + '<td style="color:var(--ub-blue);font-weight:600;white-space:nowrap">Anúncios &rsaquo;</td></tr>';
+      }).join('');
+      box.innerHTML = '<div class="drill-sec">' + rows.length + ' conjunto(s) &middot; toque p/ ver os anúncios</div>'
+        + '<div class="tbl-wrap"><table><thead><tr><th>Conjunto</th><th>Status</th><th>Bid</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>CPC</th><th>CTR</th><th></th></tr></thead><tbody>' + body + '</tbody></table></div>';
+      box.querySelectorAll('.drill-row-click').forEach(function(tr){ tr.addEventListener('click', function(){ renderDrillAds(this.getAttribute('data-adset'), this.getAttribute('data-adname')); }); });
+    }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
+  }
+  function renderDrillAds(adsetId, adsetName) {
+    var c = cboData[_drill.campIdx]; if (!c) return;
+    _drill.adsetId = adsetId; _drill.adsetName = adsetName; drillPath();
+    var box = document.getElementById('drillBody'); if (!box) return;
+    box.innerHTML = '<div class="ld"><span class="spin"></span> Carregando anúncios&hellip;</div>';
+    var url = API + '/' + c.id + '/insights?level=ad&fields=ad_id,ad_name,adset_id,spend,impressions,inline_link_clicks,cpc,ctr&' + drillRange() + '&limit=300&access_token=' + c._tk;
+    var pu = getPbUrl(), p = periodDates(), since, until;
+    if (p) { since = p.since; until = p.until; } else { var _t=new Date(Date.now()-3*3600000); until=_t.toISOString().slice(0,10); since=new Date(Date.now()-3*3600000-365*86400000).toISOString().slice(0,10); }
+    var vtP = pu ? fetch(pu + '/vturbic?since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
+    var pbP = pu ? fetch(pu + '/pbbreak?camp=' + encodeURIComponent(c.id) + '&since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
+    Promise.all([fjRetry(url), vtP, pbP]).then(function(res){
+      var d = res[0]||{}, byAd = (res[1]&&res[1].byAd)||{}, pbAd = (res[2]&&res[2].byAd)||{};
+      if (d && d.error) { box.innerHTML = '<div class="ld" style="color:#cf222e">Erro da Meta: ' + (d.error.message||'') + '</div>'; return; }
+      var rows = ((d && d.data)||[]).filter(function(r){ return String(r.adset_id) === String(adsetId); });
+      if (!rows.length) { box.innerHTML = '<div class="drill-sec">Sem anúncios com dados neste conjunto no período.</div>'; return; }
+      rows.sort(function(a,b){ return (parseFloat(b.spend)||0) - (parseFloat(a.spend)||0); });
+      var body = rows.map(function(r){
+        var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
+        var vt = byAd[String(r.ad_id)]; var ic = (vt && vt.clicks) ? vt.clicks : 0;
+        var pv = pbAd[String(r.ad_id)] || { sales:0, revenue:0 };
+        return '<tr><td style="font-weight:600;color:var(--ub-ink);max-width:240px;white-space:normal">' + escD(r.ad_name||'(sem nome)') + '</td>'
+          + '<td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td>'
+          + '<td' + (ic>0?' style="font-weight:600"':'') + '>' + ic.toLocaleString('pt-BR') + '</td>'
+          + '<td' + (pv.sales>0?' style="color:#1a7f37;font-weight:600"':'') + '>' + (pv.sales||0) + '</td>'
+          + '<td' + (pv.revenue>0?' style="color:#1a7f37"':'') + '>' + (pv.revenue>0?fmtUSD(pv.revenue):'&mdash;') + '</td>'
+          + '<td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td></tr>';
+      }).join('');
+      box.innerHTML = '<div class="drill-sec">' + rows.length + ' anúncio(s) &middot; IC = clique no botão (VTurb) &middot; Vendas/Fat. = postback</div>'
+        + '<div class="tbl-wrap"><table><thead><tr><th>Anúncio</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>IC</th><th>Vendas</th><th>Fat.</th><th>CPC</th><th>CTR</th></tr></thead><tbody>' + body + '</tbody></table></div>';
+    }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
   }
 
   /* ── Posicionamento robusto do tooltip de vendas (Problema 1) ──
@@ -3817,6 +3920,7 @@ html,body{background:var(--ub-bg)!important}
     /* Acoes: botoes proprios do card que chamam os MESMOS handlers da tabela.
        Apos agir, fecham o card p/ o usuario ver o resultado na tabela. */
     var isActive = (camp.status || '').toUpperCase() === 'ACTIVE';
+    body += '<button class="save-btn" id="detSets" style="width:100%;margin-top:12px;min-height:42px;justify-content:center;background:#fff;color:var(--ub-blue);border:1px solid var(--ub-blue);font-weight:700">&#9638; Ver conjuntos e anúncios</button>';
     body += '<div class="det-acts">'
           + '<button class="tgl-btn '+(isActive?'tgl-on':'tgl-off')+'" id="detTgl">'+(isActive?'⏸ Pausar':'▶ Ativar')+'</button>'
           + '<button class="save-btn" id="detApply">Aplicar data</button>'
@@ -3829,6 +3933,8 @@ html,body{background:var(--ub-bg)!important}
 
     var bRename = document.getElementById('detRename');
     if (bRename) bRename.addEventListener('click', function(){ closeCboDetail(); renameCampaign(i); });
+    var bSets = document.getElementById('detSets');
+    if (bSets) bSets.addEventListener('click', function(){ closeCboDetail(); openDrill(i); });
     var bTgl = document.getElementById('detTgl');
     if (bTgl) bTgl.addEventListener('click', function(){ closeCboDetail(); toggleCampaign(i); });
     var bApply = document.getElementById('detApply');
@@ -4919,6 +5025,7 @@ html,body{background:var(--ub-bg)!important}
       curTab = this.dataset.tab;
       document.getElementById('tab-'+curTab).classList.add('show');
       if (curTab === 'resumo') { renderResumo(); if (!cboData.length && getTks() && getTks().length) { var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); } }
+      else if (curTab === 'cbo') { if (!cboData.length && getTks() && getTks().length) { var spc=document.getElementById('spinCBO'); if(spc)spc.style.display='inline-block'; loadCBO(); } }
       else if (curTab === 'contas') { if (!allData.length) load(); }
       else if (curTab === 'hist') { renderHist(); fetchRoboHist(); }
       else if (curTab === 'orc') { renderOrc(); fetchRoboHist(); }
@@ -5107,7 +5214,8 @@ html,body{background:var(--ub-bg)!important}
   document.getElementById('btnRefresh').addEventListener('click', function() { if (curTab === 'cbo' || curTab === 'resumo') loadCBO(); else if (curTab === 'abo') loadABO(); else load(); });
   (function(){ var br = document.getElementById('btnLoadResumo'); if (br) br.addEventListener('click', function(){ var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); }); })();
   document.getElementById('btnTokens').addEventListener('click', openModal);
-  document.getElementById('btnLoadCBO').addEventListener('click', loadCBO);
+  (function(){ var blc = document.getElementById('btnLoadCBO'); if (blc) blc.addEventListener('click', loadCBO); })();
+  (function(){ var db = document.getElementById('drillBack'); if (db) db.addEventListener('click', closeDrill); })();
   /* PAUSAR/ATIVAR TUDO (so campanhas com CBO no nome). Age nas campanhas JA carregadas (cboData). */
   function bulkCBOStatus(newStatus) {
     if (!cboData || !cboData.length) { alert('Carregue as campanhas CBO primeiro (botão "Carregar campanhas CBO").'); return; }
@@ -5297,7 +5405,10 @@ html,body{background:var(--ub-bg)!important}
      No mobile o refresh e manual (trocar de aba / recarregar a pagina). */
   var isMobile = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || window.innerWidth < 820;
   if (!isMobile) {
-    timer = setInterval(function() { if (curTab === 'contas') load(); }, 5*60*1000);
+    timer = setInterval(function() {
+      if (curTab === 'contas') load();
+      else if ((curTab === 'cbo' || curTab === 'resumo') && cboData.length && getTks() && getTks().length) loadCBO();
+    }, 5*60*1000);
   }
 })();
 </script>
