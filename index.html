@@ -185,8 +185,7 @@ html,body{background:var(--ub-bg)!important}
 #mdb .udb-app{display:flex;min-height:100vh;align-items:stretch}
 #mdb .udb-sidebar{width:var(--ub-sbw);flex:0 0 var(--ub-sbw);background:var(--ub-card);border-right:1px solid var(--ub-line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:40}
 #mdb .udb-logo{display:flex;align-items:center;gap:9px;padding:18px 20px 12px;font-weight:900;font-size:20px;letter-spacing:-.02em;color:#1a1033}
-#mdb .udb-logo .u{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#1a56ff,#0a1b5e);position:relative;flex:0 0 auto}
-#mdb .udb-logo .u::after{content:"";position:absolute;right:5px;top:4px;width:8px;height:8px;background:#28c7ff;border-radius:2px}
+#mdb .udb-logo .u{width:32px;height:32px;border-radius:8px;background:#0a0e1a url(icon-192.png) center/cover no-repeat;flex:0 0 auto}
 #mdb .udb-dash{margin:4px 12px 8px;border:1px solid var(--ub-line);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--ub-ink2);display:flex;align-items:center;gap:9px}
 #mdb .udb-dash .cx{margin-left:auto;opacity:.5}
 #mdb .udb-sec{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ub-mut);padding:12px 22px 4px}
@@ -226,8 +225,8 @@ html,body{background:var(--ub-bg)!important}
 #mdb thead th:first-child,#mdb thead tr:first-child th{background:var(--ub-th)}
 #mdb td{padding:12px 14px;border-bottom:1px solid var(--ub-line2);color:var(--ub-ink);font-variant-numeric:tabular-nums}
 /* linhas verticais separando as colunas (melhor leitura) */
-#mdb #tab-cbo th,#mdb #tab-cbo td,#mdb #cboDrill th,#mdb #cboDrill td{border-right:1px solid var(--ub-line2)}
-#mdb #tab-cbo th:last-child,#mdb #tab-cbo td:last-child,#mdb #cboDrill th:last-child,#mdb #cboDrill td:last-child{border-right:none}
+#mdb #tab-cbo th,#mdb #tab-cbo td{border-right:1px solid var(--ub-line2)}
+#mdb #tab-cbo th:last-child,#mdb #tab-cbo td:last-child{border-right:none}
 #mdb tbody tr:nth-child(even) td{background:#fcfcfd}
 #mdb tbody tr:hover td{background:#f3f7ff}
 /* destaque nos cabeçalhos das métricas-chave (ordenáveis) */
@@ -291,16 +290,18 @@ html,body{background:var(--ub-bg)!important}
 #mdb .cbo-card .cc-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
 #mdb .cbo-card .cc-foot .cc-edit{flex:1;text-align:center;font-size:12.5px;font-weight:700;color:var(--ub-blue);background:#eef3ff;border:1px solid #d4e2ff;border-radius:9px;padding:9px;cursor:pointer}
 #mdb .cbo-card .cc-foot .cc-sets{flex:1;text-align:center;font-size:12.5px;font-weight:700;color:var(--ub-ink2);background:#f3f2f7;border:1px solid var(--ub-line);border-radius:9px;padding:9px;cursor:pointer}
-/* ===== Drill-down Conjuntos -> Anúncios ===== */
-#mdb #cboDrill{display:none}
-#mdb #tab-cbo.drilling #cboDrill{display:block}
-#mdb #tab-cbo.drilling .cbo-cards,#mdb #tab-cbo.drilling .cbo-table,#mdb #tab-cbo.drilling #cboMetrics,#mdb #tab-cbo.drilling > .card.udb-panel{display:none!important}
-#mdb .drill-crumb{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-#mdb .drill-back{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:var(--ub-blue);background:#eef3ff;border:1px solid #d4e2ff;border-radius:9px;padding:8px 13px;cursor:pointer}
-#mdb .drill-path{font-size:14px;color:var(--ub-ink2);font-weight:600}
-#mdb .drill-path b{color:var(--ub-ink)}
-#mdb .drill-path .sep{color:var(--ub-mut);margin:0 7px}
-#mdb .drill-path .lnk{color:var(--ub-blue);cursor:pointer}
+/* ===== Drill por SUBABAS: Campanhas / Conjuntos / Anúncios (estilo UTMify) ===== */
+#mdb .cbo-sub{display:flex;align-items:center;gap:2px;border-bottom:1px solid var(--ub-line);margin-bottom:16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#mdb .cbo-sub .st{display:inline-flex;align-items:center;gap:8px;background:none;border:none;border-bottom:2px solid transparent;padding:12px 14px;font-size:14px;font-weight:600;color:var(--ub-ink2);cursor:pointer;white-space:nowrap}
+#mdb .cbo-sub .st svg{width:17px;height:17px;flex:0 0 auto}
+#mdb .cbo-sub .st.on{color:var(--ub-blue);border-bottom-color:var(--ub-blue)}
+#mdb .cbo-sub .st:disabled{color:var(--ub-mut);opacity:.55;cursor:not-allowed}
+#mdb .cbo-sub .chip{display:none;align-items:center;gap:6px;background:var(--ub-blue);color:#fff;font-size:11.5px;font-weight:700;border-radius:20px;padding:3px 5px 3px 10px}
+#mdb .cbo-sub .chip.show{display:inline-flex}
+#mdb .cbo-sub .chip .x{cursor:pointer;background:rgba(255,255,255,.28);border-radius:50%;width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;line-height:1}
+#mdb #cboSets,#mdb #cboAds{display:none}
+#mdb #tab-cbo.sub-sets #cboSets,#mdb #tab-cbo.sub-ads #cboAds{display:block}
+#mdb #tab-cbo.sub-sets #cboMetrics,#mdb #tab-cbo.sub-sets > .card.udb-panel,#mdb #tab-cbo.sub-sets .cbo-cards,#mdb #tab-cbo.sub-sets .cbo-table,#mdb #tab-cbo.sub-ads #cboMetrics,#mdb #tab-cbo.sub-ads > .card.udb-panel,#mdb #tab-cbo.sub-ads .cbo-cards,#mdb #tab-cbo.sub-ads .cbo-table{display:none!important}
 #mdb .drill-sec{font-size:12px;color:var(--ub-mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin:4px 0 10px}
 #mdb .drill-row-click{cursor:pointer}
 #mdb .drill-row-click:hover td{background:#eef3ff!important}
@@ -314,7 +315,7 @@ html,body{background:var(--ub-bg)!important}
   #mdb .udb-menubtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:none;border:none;cursor:pointer;color:var(--ub-ink2)}
   #mdb .udb-menubtn svg{width:22px;height:22px}
   #mdb .udb-mlogo{display:flex;align-items:center}
-  #mdb .udb-mlogo .u{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#1a56ff,#0a1b5e)}
+  #mdb .udb-mlogo .u{width:28px;height:28px;border-radius:7px;background:#0a0e1a url(icon-192.png) center/cover no-repeat}
   #mdb .udb-topbar .dname,#mdb .udb-topbar .ts,#mdb .udb-topbar .user .nm,#mdb .udb-topbar .user .rl{display:none}
   #mdb .udb-content{padding:14px 10px 40px}
   #mdb .udb-filters{grid-template-columns:1fr 1fr;gap:11px}
@@ -329,7 +330,6 @@ html,body{background:var(--ub-bg)!important}
   <div class="udb-app">
     <aside class="udb-sidebar" id="udbSidebar">
       <div class="udb-logo"><span class="u"></span>Scalefy</div>
-      <div class="udb-dash"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> T2 Emerson — (UTC-3) <svg class="cx" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
       <div class="udb-sec">Menu</div>
       <nav class="udb-nav">
         <button class="tab-btn on" data-tab="resumo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard</button>
@@ -347,13 +347,10 @@ html,body{background:var(--ub-bg)!important}
     <div class="udb-main">
       <header class="udb-topbar">
         <button class="udb-menubtn" id="udbMenu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-        <span class="udb-mlogo"><span class="u"></span></span>
-        <div class="dname"><span class="dot"></span>T2 Emerson — (UTC-3) BR <span id="appVer" style="font-size:11px;color:#656d76;font-weight:400;background:#eef1f5;border:1px solid #e4e8ee;border-radius:10px;padding:1px 8px;margin-left:4px" title="Versão do painel — se estiver diferente da que o Emerson passou, dê Ctrl+Shift+R">v2026-11-06.1</span></div>
+        <span class="udb-mlogo"><span class="u"></span>Scalefy</span>
         <div class="sp"></div>
         <span class="ts" id="tsLbl"></span>
         <span class="ts" id="fxLbl" title="Cotacao USD/BRL ao vivo (AwesomeAPI)" style="color:#1a7f37;font-weight:600"></span>
-        <button class="btn" id="btnRefresh"><span id="spinIco" class="spin" style="display:none"></span>&#8635; Atualizar</button>
-        <div class="user"><div style="text-align:right"><div class="nm">Emerson</div><div class="rl">Gestor</div></div><div class="av">E</div></div>
       </header>
       <div class="udb-content">
         <div id="alertBox" class="alert-box" style="display:none"></div>
@@ -387,6 +384,15 @@ html,body{background:var(--ub-bg)!important}
         </table>
       </div>
     </div>
+    <div class="card udb-panel" style="margin-top:16px">
+      <div class="udb-panelhd" style="margin-bottom:10px"><h2 class="udb-h2" style="font-size:16px">Top an&uacute;ncios &middot; por lucro</h2><span class="udb-badge" id="resumoAdsBadge" style="background:#eafaf0;color:var(--ub-green-d);border-color:#c8efd8">&#128200; no per&iacute;odo</span></div>
+      <div class="tbl-wrap" style="box-shadow:none;border:none">
+        <table>
+          <thead><tr><th>An&uacute;ncio</th><th>Campanha</th><th>Gasto</th><th>Vendas</th><th>Faturamento</th><th>Lucro</th><th>ROAS</th></tr></thead>
+          <tbody id="resumoTopAdsBody"><tr><td colspan="7" class="ld">Sem dados ainda.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
   </div>
   <div class="tab-pane" id="tab-contas">
     <div id="mainContent"><div class="ld"><span class="spin"></span>Iniciando...</div></div>
@@ -406,6 +412,14 @@ html,body{background:var(--ub-bg)!important}
       <button class="pill" data-cbostatus="paused">Pausadas</button>
       <button class="pill" data-cbostatus="error">Erro</button>
       <button class="pill" data-cbostatus="teste">TESTE</button>
+    </div>
+    <!-- Subabas: Campanhas / Conjuntos / Anúncios (seleção dirige o drill) -->
+    <div class="cbo-sub" id="cboSub">
+      <button class="st on" data-sub="camp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg> Campanhas</button>
+      <span class="chip" id="chipCamp"><b>0</b>&nbsp;item <span class="x" data-clear="camp">&times;</span></span>
+      <button class="st" data-sub="sets" id="stSets" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Conjuntos</button>
+      <span class="chip" id="chipSets"><b>0</b>&nbsp;item <span class="x" data-clear="sets">&times;</span></span>
+      <button class="st" data-sub="ads" id="stAds" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg> An&uacute;ncios</button>
     </div>
     <!-- Cards de métrica (período selecionado) -->
     <div class="metrics" id="cboMetrics"></div>
@@ -443,13 +457,8 @@ html,body{background:var(--ub-bg)!important}
       </div>
     </div>
     <div id="cboCards" class="cbo-cards"><div class="ld" style="padding:30px"><span class="spin"></span> Carregando campanhas&hellip;</div></div>
-    <div id="cboDrill">
-      <div class="drill-crumb">
-        <button class="drill-back" id="drillBack"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-3px"><path d="M15 18l-6-6 6-6"/></svg> Campanhas</button>
-        <span class="drill-path" id="drillPath"></span>
-      </div>
-      <div id="drillBody"></div>
-    </div>
+    <div id="cboSets"><div class="card udb-panel" style="margin-bottom:14px"><div class="udb-panelhd"><h2 class="udb-h2" id="setsTitle">Conjuntos</h2><span class="udb-badge" style="background:#eef3ff;color:var(--ub-blue);border-color:#d4e2ff">das campanhas selecionadas</span><div class="udb-tb"><span id="setsSelInfo" style="font-size:12px;color:var(--ub-ink2)"></span><button class="btn" id="setsPause" style="display:none;border-color:var(--ub-red);color:var(--ub-red)">&#9208; Pausar</button><button class="btn" id="setsActivate" style="display:none;border-color:var(--ub-green-d);color:var(--ub-green-d)">&#9654; Ativar</button></div></div><div id="setsBody"></div></div></div>
+    <div id="cboAds"><div class="card udb-panel" style="margin-bottom:14px"><div class="udb-panelhd"><h2 class="udb-h2" id="adsTitle">An&uacute;ncios</h2><span class="udb-badge" style="background:#eef3ff;color:var(--ub-blue);border-color:#d4e2ff">dos conjuntos selecionados</span><div class="udb-tb"><span id="adsSelInfo" style="font-size:12px;color:var(--ub-ink2)"></span><button class="btn" id="adsPause" style="display:none;border-color:var(--ub-red);color:var(--ub-red)">&#9208; Pausar</button><button class="btn" id="adsActivate" style="display:none;border-color:var(--ub-green-d);color:var(--ub-green-d)">&#9654; Ativar</button></div></div><div id="adsBody"></div></div></div>
     <div class="tbl-wrap cbo-table">
       <table>
         <thead>
@@ -494,9 +503,6 @@ html,body{background:var(--ub-bg)!important}
     </div>
   </div>
   <div class="tab-pane" id="tab-abo">
-    <div class="cbo-info">
-      <strong>ABO</strong> &mdash; campanhas com or&ccedil;amento no <strong>conjunto</strong> (ad set), n&atilde;o na campanha. Vis&atilde;o somente leitura: gasto (Meta), vendas (RedTrack por sub3), CPA e ROAS. O or&ccedil;amento mostrado &eacute; a soma do di&aacute;rio dos conjuntos ativos.
-    </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div class="period-bar">
         <span style="font-size:12px;color:#656d76;margin-right:2px">Periodo:</span>
@@ -529,9 +535,6 @@ html,body{background:var(--ub-bg)!important}
     </div>
   </div>
   <div class="tab-pane" id="tab-hist">
-    <div class="cbo-info">
-      <strong>Hist&#243;rico de regras aplicadas</strong> &mdash; registro acumulado (neste dispositivo) de cada regra que voce aplicou nas campanhas: o que mudou, quando e o cenario do momento (ROAS / vendas / gasto). Clique numa campanha para expandir a linha do tempo.
-    </div>
     <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
       <input class="srch" id="histSrch" type="text" placeholder="Buscar campanha..." style="max-width:260px">
       <span style="font-size:12px;color:#656d76">Dia:</span>
@@ -549,9 +552,6 @@ html,body{background:var(--ub-bg)!important}
     <div id="histBody"></div>
   </div>
   <div class="tab-pane" id="tab-orc">
-    <div class="cbo-info">
-      <strong>&#128176; Altera&#231;&#245;es de or&#231;amento</strong> &mdash; toda vez que o <b>rob&#244;</b> ou <b>voc&#234;</b> (bot&#227;o Aplicar) mudar o or&#231;amento desejado de uma campanha, fica aqui: <b>hor&#225;rio exato</b>, valor <b>anterior &rarr; novo</b> e a origem (Manual / Rob&#244;). Pausar/Ativar n&#227;o entram aqui (n&#227;o mexem em or&#231;amento).
-    </div>
     <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
       <input class="srch" id="orcSrch" type="text" placeholder="Buscar campanha..." style="max-width:260px">
       <span style="font-size:12px;color:#656d76">Dia:</span>
@@ -569,7 +569,6 @@ html,body{background:var(--ub-bg)!important}
   <div class="tab-pane" id="tab-notif">
     <div class="card udb-panel" style="margin-bottom:16px">
       <div class="udb-panelhd" style="margin-bottom:12px"><h2 class="udb-h2">&#128276; Notifica&#231;&#245;es de venda</h2></div>
-      <p style="font-size:13px;color:var(--ub-ink2);margin-bottom:14px;line-height:1.55">Receba um aviso <b>toda vez que cai uma venda</b> (JVZoo, Cartpanda, Digistore). Com <b>som de caixa</b> &#128176; quando o painel est&#225; aberto e, depois de instalar como app, <b>notifica&#231;&#227;o no celular</b>.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-blue" id="notifEnable">&#128276; Ativar notifica&#231;&#245;es</button>
         <button class="btn" id="notifClear">Limpar lista</button>
@@ -3285,6 +3284,9 @@ html,body{background:var(--ub-bg)!important}
     /* (Barra de diagnostico do RedTrack/Humor removida da tela a pedido.) */
     applyCboFilters();
     cboLoading = false; cboLoaded = true;
+    if (typeof _topAds !== 'undefined') { _topAds.rows = null; _topAds.period = null; } /* dados novos -> recarrega top ads */
+    /* reset do drill (seleção) ao recarregar as campanhas */
+    if (typeof _dd !== 'undefined') { _dd.camps = []; _dd.adsets = []; var _pc=document.getElementById('tab-cbo'); if(_pc) _pc.classList.remove('sub-sets','sub-ads'); document.querySelectorAll('#cboSub .st').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sub')==='camp'); }); if(typeof ddChips==='function') ddChips(); }
     var spR = document.getElementById('spinResumo'); if (spR) spR.style.display = 'none';
     renderResumo();
   }
@@ -3331,9 +3333,9 @@ html,body{background:var(--ub-bg)!important}
       var top = cboData.slice().map(function(c){
         var ps = c._periodSpend||0; var fv = campFat(c); var sv = (hasC&&c._conv)?(c._conv.sales||0):0;
         return { c:c, sp:ps, fat:fv, lucro:fv-ps, sales:sv, roas: ps>0?fv/ps:0 };
-      }).filter(function(r){ return r.sp>0 || r.fat>0; }).sort(function(a,b){ return b.lucro-a.lucro; }).slice(0,8);
+      }).filter(function(r){ return r.sales>0; }).sort(function(a,b){ return b.lucro-a.lucro; }).slice(0,8);
       var tb = document.getElementById('resumoTopBody');
-      if (!top.length) { tb.innerHTML = '<tr><td colspan="7" class="ld">Sem gasto/faturamento no per&iacute;odo.</td></tr>'; }
+      if (!top.length) { tb.innerHTML = '<tr><td colspan="7" class="ld">Nenhuma campanha com venda no per&iacute;odo.</td></tr>'; }
       else { tb.innerHTML = top.map(function(r){
         var nm = (r.c.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
         var ac = (r.c._accountName||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
@@ -3347,6 +3349,7 @@ html,body{background:var(--ub-bg)!important}
           +'<td><span class="'+lc+'">'+(hasC?fmtUSD(r.lucro):'---')+'</span></td>'
           +'<td>'+(hasC&&r.roas>0?'<span class="'+rc+'">'+r.roas.toFixed(2).replace('.',',')+'</span>':'---')+'</td></tr>';
       }).join(''); }
+      renderResumoTopAds();
     }
     /* --- Mini-resumo de contas (usa allData se já foi carregado na aba Contas) --- */
     var aEl = document.getElementById('resumoAccts'), aBadge = document.getElementById('resumoAcctBadge');
@@ -3361,6 +3364,60 @@ html,body{background:var(--ub-bg)!important}
       if (aBadge) aBadge.textContent = 'não carregado';
       aEl.innerHTML = '<div class="mc" style="grid-column:1/-1"><div class="mc-s" style="margin:0">Abra a aba <b>Contas</b> para carregar o resumo de contas.</div></div>';
     }
+  }
+
+  /* ── Top ANÚNCIOS por lucro (Dashboard) ── lazy + cache por período. Gasto/ad (Meta level=ad) + vendas/fat/ad (postback). */
+  var _topAds = { period:null, rows:null, loading:false };
+  function paintTopAds(rows){
+    var body=document.getElementById('resumoTopAdsBody'); if(!body) return;
+    if(!rows || !rows.length){ body.innerHTML='<tr><td colspan="7" class="ld">Nenhum anúncio com venda no período.</td></tr>'; return; }
+    body.innerHTML = rows.map(function(r){
+      var nm=(r.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      var cp=(r.camp||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      var rc=r.roas>=1.5?'d-good':(r.roas>=1.3?'d-warn':(r.roas>0?'d-bad':''));
+      var lc=r.lucro>=0?'d-good':'d-bad';
+      return '<tr><td style="font-weight:600;color:var(--ub-ink);max-width:200px;white-space:normal">'+nm+'</td>'
+        +'<td style="color:var(--ub-ink2);max-width:160px;white-space:normal">'+cp+'</td>'
+        +'<td>'+fmtUSD(r.sp)+'</td>'
+        +'<td>'+r.sales+'</td>'
+        +'<td style="color:#1a7f37">'+(r.fat>0?fmtUSD(r.fat):'---')+'</td>'
+        +'<td><span class="'+lc+'">'+fmtUSD(r.lucro)+'</span></td>'
+        +'<td>'+(r.roas>0?'<span class="'+rc+'">'+r.roas.toFixed(2).replace('.',',')+'</span>':'---')+'</td></tr>';
+    }).join('');
+  }
+  function renderResumoTopAds(){
+    var body=document.getElementById('resumoTopAdsBody'); if(!body) return;
+    if(!cboData.length || !hasConv()){ body.innerHTML='<tr><td colspan="7" class="ld">Sem dados ainda.</td></tr>'; return; }
+    var per=periodLabel();
+    if(_topAds.period===per && _topAds.rows){ paintTopAds(_topAds.rows); return; }
+    if(_topAds.loading) return;
+    _topAds.loading=true;
+    body.innerHTML='<tr><td colspan="7" class="ld"><span class="spin"></span> Carregando top anúncios…</td></tr>';
+    var _pd=periodDates(), rangeP;
+    if(_pd){ rangeP='time_range='+encodeURIComponent(JSON.stringify({since:_pd.since,until:_pd.until})); }
+    else { var _s=new Date(); _s.setMonth(_s.getMonth()-36); rangeP='time_range='+encodeURIComponent(JSON.stringify({since:_s.toISOString().slice(0,10),until:new Date().toISOString().slice(0,10)})); }
+    var accs={}, campName={};
+    cboData.forEach(function(c){ var a=accs[c._acctId]||(accs[c._acctId]={tk:c._tk, ids:[]}); a.ids.push(String(c.id)); campName[String(c.id)]=c.name; });
+    var spendP = Object.keys(accs).map(function(aid){
+      var a=accs[aid];
+      var filt='&filtering='+encodeURIComponent(JSON.stringify([{field:'campaign.id',operator:'IN',value:a.ids}]));
+      return fjRetry(API+'/'+aid+'/insights?level=ad&fields=ad_id,ad_name,campaign_id,spend&'+rangeP+filt+'&limit=500&access_token='+a.tk).then(function(d){ return (d&&d.data)||[]; }).catch(function(){ return []; });
+    });
+    var pu=getPbUrl(), since, until;
+    if(_pd){ since=_pd.since; until=_pd.until; } else { var _t=new Date(Date.now()-3*3600000); until=_t.toISOString().slice(0,10); since=new Date(Date.now()-3*3600000-365*86400000).toISOString().slice(0,10); }
+    var revP = pu?fetch(pu+'/pbbreak?since='+since+'&until='+until,{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return{};}):Promise.resolve({});
+    Promise.all([Promise.all(spendP), revP]).then(function(res){
+      var adRows=[].concat.apply([], res[0]);
+      var byAd=(res[1]&&res[1].byAd)||{};
+      var map={};
+      adRows.forEach(function(r){ var id=String(r.ad_id||''); if(!id) return; if(!map[id]) map[id]={ name:r.ad_name||'(sem nome)', camp:campName[String(r.campaign_id)]||'', sp:0 }; map[id].sp += parseFloat(r.spend)||0; });
+      var rows=Object.keys(map).map(function(id){
+        var m=map[id], pv=byAd[id]||{sales:0,revenue:0};
+        return { name:m.name, camp:m.camp, sp:m.sp, sales:pv.sales||0, fat:pv.revenue||0, lucro:(pv.revenue||0)-m.sp, roas:m.sp>0?(pv.revenue||0)/m.sp:0 };
+      }).filter(function(r){ return r.sales>0; }).sort(function(a,b){ return b.lucro-a.lucro; }).slice(0,8);
+      _topAds.period=per; _topAds.rows=rows; _topAds.loading=false;
+      paintTopAds(rows);
+    }).catch(function(){ _topAds.loading=false; var b2=document.getElementById('resumoTopAdsBody'); if(b2) b2.innerHTML='<tr><td colspan="7" class="ld" style="color:#cf222e">Erro ao carregar top anúncios.</td></tr>'; });
   }
 
   /* Cards de métrica da aba CBO (estilo UTMify). Mesma base dos totais. */
@@ -3524,7 +3581,7 @@ html,body{background:var(--ub-bg)!important}
     }).join('');
     box.querySelectorAll('.cc-tgl').forEach(function(b){ b.addEventListener('click', function(){ toggleCampaign(parseInt(this.getAttribute('data-tgl'))); }); });
     box.querySelectorAll('.cc-edit').forEach(function(b){ b.addEventListener('click', function(){ openCboDetail(parseInt(this.getAttribute('data-edit'))); }); });
-    box.querySelectorAll('.cc-sets').forEach(function(b){ b.addEventListener('click', function(){ openDrill(parseInt(this.getAttribute('data-sets'))); }); });
+    box.querySelectorAll('.cc-sets').forEach(function(b){ b.addEventListener('click', function(){ ddOpenCamp(parseInt(this.getAttribute('data-sets'))); }); });
     box.querySelectorAll('.cbo-sel').forEach(function(ch){ ch.addEventListener('change', function(){ if (window._updateCboSelBar) window._updateCboSelBar(); }); });
   }
 
@@ -3540,114 +3597,151 @@ html,body{background:var(--ub-bg)!important}
       .catch(function(e){ var msg = (e && e.message) ? e.message : String(e); if (typeof notifyErr === 'function') notifyErr('Erro ao renomear', msg); else alert('Erro ao renomear: ' + msg); });
   }
 
-  /* ===== DRILL-DOWN: Campanha -> Conjuntos -> Anúncios (estilo UTMify) ===== */
-  var _drill = { campIdx: null, adsetId: null, adsetName: '' };
+  /* ===== DRILL por SUBABAS: seleção de Campanha -> Conjuntos -> Anúncios (estilo UTMify) ===== */
+  var _dd = { camps: [], adsets: [], tkById: {} };
   function drillRange() { var p = periodDates(); var s, u; if (p) { s = p.since; u = p.until; } else { var d = new Date(); d.setMonth(d.getMonth()-36); s = d.toISOString().slice(0,10); u = new Date().toISOString().slice(0,10); } return 'time_range=' + encodeURIComponent(JSON.stringify({ since: s, until: u })); }
   function escD(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  /* Switch de status (igual card) p/ conjunto/anúncio no drill. kind='set'|'ad'. */
+  var _stMap = {PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'};
+  function stBadge(st){ return st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">'+(_stMap[st]||st)+'</span>' : '&mdash;'); }
   function drillSwitch(kind, id, active){
     var bg = active ? 'var(--ub-blue)' : '#cfd3dc', knob = active ? '21px' : '3px';
     return '<button class="drill-tgl" data-kind="'+kind+'" data-id="'+id+'" data-active="'+(active?'1':'0')+'" title="'+(active?'Pausar':'Ativar')+'" style="width:40px;height:23px;border-radius:13px;border:none;cursor:pointer;position:relative;background:'+bg+';flex:0 0 auto"><span style="position:absolute;top:3px;left:'+knob+';width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .15s"></span></button>';
   }
-  function drillToggle(kind, id, active){
-    var c = cboData[_drill.campIdx]; if (!c) return;
-    var newStatus = active ? 'PAUSED' : 'ACTIVE';
-    var lbl = (kind==='set') ? 'Conjunto' : 'Anúncio';
-    withTokenFallback(c._tk, function(tk){ return postForm(id, tk, { status: newStatus }); })
-      .then(function(){
-        if (typeof notifyOk === 'function') notifyOk(lbl + (newStatus==='PAUSED'?' pausado':' ativado'), '');
-        if (kind==='set'){ (c._adsets||[]).forEach(function(s){ if(String(s.id)===String(id)) s.effective_status=newStatus; }); renderDrillSets(); }
-        else { renderDrillAds(_drill.adsetId, _drill.adsetName); }
-      })
-      .catch(function(e){ var m=(e&&e.message)?e.message:String(e); if (typeof notifyErr==='function') notifyErr('Erro ao '+(active?'pausar':'ativar')+' '+lbl.toLowerCase(), m); else alert(m); });
+  function ddToggle(kind, id, active){
+    var tk = _dd.tkById[String(id)]; if(!tk){ var cs=ddCamps()[0]; tk = cs ? cs._tk : null; } if(!tk) return;
+    var newStatus = active ? 'PAUSED' : 'ACTIVE', lbl = (kind==='set')?'Conjunto':'Anúncio';
+    withTokenFallback(tk, function(t){ return postForm(id, t, { status: newStatus }); })
+      .then(function(){ if (typeof notifyOk==='function') notifyOk(lbl+(newStatus==='PAUSED'?' pausado':' ativado'),''); if(kind==='set') renderSetsView(); else renderAdsView(); })
+      .catch(function(e){ var m=(e&&e.message)||String(e); if(typeof notifyErr==='function') notifyErr('Erro ao '+(active?'pausar':'ativar'), m); else alert(m); });
   }
-  function openDrill(i) {
-    var c = cboData[i]; if (!c) return;
-    _drill.campIdx = i; _drill.adsetId = null;
-    var pane = document.getElementById('tab-cbo'); if (pane) pane.classList.add('drilling');
-    renderDrillSets();
-    try { document.getElementById('cboDrill').scrollIntoView({ block:'start', behavior:'smooth' }); } catch(e){}
+  function ddCamps(){ return _dd.camps.map(function(i){ return cboData[i]; }).filter(Boolean); }
+  function ddSub(sub){
+    var pane=document.getElementById('tab-cbo'); if(!pane) return;
+    pane.classList.remove('sub-sets','sub-ads');
+    if(sub==='sets') pane.classList.add('sub-sets'); else if(sub==='ads') pane.classList.add('sub-ads');
+    document.querySelectorAll('#cboSub .st').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sub')===sub); });
+    if(sub==='sets') renderSetsView(); else if(sub==='ads') renderAdsView();
+    try{ document.getElementById('cboSub').scrollIntoView({block:'start'}); }catch(e){}
   }
-  function closeDrill() { var pane = document.getElementById('tab-cbo'); if (pane) pane.classList.remove('drilling'); _drill.campIdx = null; _drill.adsetId = null; }
-  function drillPath() {
-    var c = cboData[_drill.campIdx]; var el = document.getElementById('drillPath'); if (!el || !c) return;
-    var html = '<b>' + escD(c.name) + '</b>';
-    if (_drill.adsetId) html += '<span class="sep">&rsaquo;</span><span class="lnk" id="crumbSets">Conjuntos</span><span class="sep">&rsaquo;</span><b>' + escD(_drill.adsetName) + '</b>';
-    else html += '<span class="sep">&rsaquo;</span><b>Conjuntos</b>';
-    el.innerHTML = html;
-    var cs = document.getElementById('crumbSets'); if (cs) cs.addEventListener('click', function(){ renderDrillSets(); });
+  function ddChips(){
+    var cC=_dd.camps.length, cS=_dd.adsets.length;
+    var ch=document.getElementById('chipCamp'); if(ch){ ch.classList.toggle('show', cC>0); var b=ch.querySelector('b'); if(b) b.textContent=cC; }
+    var cs=document.getElementById('chipSets'); if(cs){ cs.classList.toggle('show', cS>0); var b2=cs.querySelector('b'); if(b2) b2.textContent=cS; }
+    var ss=document.getElementById('stSets'); if(ss) ss.disabled = cC===0;
+    var sa=document.getElementById('stAds'); if(sa) sa.disabled = cS===0;
   }
-  function renderDrillSets() {
-    var c = cboData[_drill.campIdx]; if (!c) return;
-    _drill.adsetId = null; _drill.adsetName = ''; drillPath();
-    var box = document.getElementById('drillBody'); if (!box) return;
-    box.innerHTML = '<div class="ld"><span class="spin"></span> Carregando conjuntos&hellip;</div>';
-    var url = API + '/' + c.id + '/insights?level=adset&fields=adset_id,adset_name,spend,impressions,inline_link_clicks,cpc,ctr&' + drillRange() + '&limit=200&access_token=' + c._tk;
-    fjRetry(url).then(function(d){
-      if (d && d.error) { box.innerHTML = '<div class="ld" style="color:#cf222e">Erro da Meta: ' + (d.error.message||'') + '</div>'; return; }
-      var rows = (d && d.data) || [];
-      var byId = {}; (c._adsets || []).forEach(function(s){ byId[String(s.id)] = s; });
-      var seen = {}; rows.forEach(function(r){ seen[String(r.adset_id)] = 1; });
-      (c._adsets || []).forEach(function(s){ var st=(s.effective_status||'').toUpperCase(); if (!seen[String(s.id)] && st!=='ARCHIVED' && st!=='DELETED') rows.push({ adset_id:s.id, adset_name:s.name, spend:0, impressions:0, inline_link_clicks:0 }); });
-      if (!rows.length) { box.innerHTML = '<div class="ld">Nenhum conjunto encontrado.</div>'; return; }
-      rows.sort(function(a,b){ return (parseFloat(b.spend)||0) - (parseFloat(a.spend)||0); });
-      var body = rows.map(function(r){
-        var s = byId[String(r.adset_id)] || {}; var st = (s.effective_status||'').toUpperCase();
-        var stTxt = st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">' + ({PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'}[st]||st) + '</span>' : '&mdash;');
-        var bid = (s.bid_amount!=null && +s.bid_amount>0) ? fmtUSD(+s.bid_amount/100) : '&mdash;';
-        var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
-        var active = st==='ACTIVE';
-        var tgl = (st && st!=='DISAPPROVED' && st!=='WITH_ISSUES' && s.id) ? drillSwitch('set', r.adset_id, active) : '';
-        return '<tr class="drill-row-click" data-adset="' + r.adset_id + '" data-adname="' + escD(r.adset_name).replace(/"/g,'&quot;') + '">'
-          + '<td style="font-weight:600;color:var(--ub-ink);max-width:260px;white-space:normal">' + escD(r.adset_name||'(sem nome)') + '</td>'
-          + '<td><span style="display:inline-flex;align-items:center;gap:8px">' + tgl + stTxt + '</span></td><td>' + bid + '</td><td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td><td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td>'
-          + '<td style="color:var(--ub-blue);font-weight:600;white-space:nowrap">Anúncios &rsaquo;</td></tr>';
+  /* chamado quando a seleção de CAMPANHAS muda (checkboxes .cbo-sel) */
+  function ddOnCampSel(){
+    var idxs=[]; document.querySelectorAll('.cbo-sel:checked').forEach(function(x){ var i=parseInt(x.getAttribute('data-i')); if(!isNaN(i) && idxs.indexOf(i)<0) idxs.push(i); });
+    var changed = idxs.join(',') !== _dd.camps.join(',');
+    _dd.camps = idxs;
+    if(changed) _dd.adsets = [];
+    ddChips();
+  }
+  function ddClear(which){
+    if(which==='camp'){ _dd.camps=[]; _dd.adsets=[]; document.querySelectorAll('.cbo-sel:checked').forEach(function(x){ x.checked=false; }); if(window._updateCboSelBar) window._updateCboSelBar(); ddSub('camp'); }
+    else if(which==='sets'){ _dd.adsets=[]; if(document.getElementById('tab-cbo').classList.contains('sub-ads')) ddSub('sets'); else renderSetsView(); }
+    ddChips();
+  }
+  function renderSetsView(){
+    var camps=ddCamps();
+    var t=document.getElementById('setsTitle'); if(t) t.textContent = camps.length===1 ? camps[0].name : (camps.length+' campanhas');
+    var box=document.getElementById('setsBody'); if(!box) return;
+    if(!camps.length){ box.innerHTML='<div class="ld">Selecione uma campanha na aba <b>Campanhas</b>.</div>'; ddSetsBar(); return; }
+    box.innerHTML='<div class="ld"><span class="spin"></span> Carregando conjuntos&hellip;</div>';
+    Promise.all(camps.map(function(c){
+      return fjRetry(API+'/'+c.id+'/insights?level=adset&fields=adset_id,adset_name,spend,impressions,inline_link_clicks,cpc,ctr&'+drillRange()+'&limit=200&access_token='+c._tk)
+        .then(function(d){ return {c:c, rows:(d&&d.data)||[]}; }).catch(function(){ return {c:c, rows:[]}; });
+    })).then(function(results){
+      var all=[];
+      results.forEach(function(res){ var c=res.c; var byId={}; (c._adsets||[]).forEach(function(s){ byId[String(s.id)]=s; });
+        var seen={}; res.rows.forEach(function(r){ seen[String(r.adset_id)]=1; });
+        (c._adsets||[]).forEach(function(s){ var st=(s.effective_status||'').toUpperCase(); if(!seen[String(s.id)] && st!=='ARCHIVED' && st!=='DELETED') res.rows.push({adset_id:s.id, adset_name:s.name, spend:0, impressions:0, inline_link_clicks:0}); });
+        res.rows.forEach(function(r){ var s=byId[String(r.adset_id)]||{}; _dd.tkById[String(r.adset_id)]=c._tk; all.push({ id:r.adset_id, name:r.adset_name, campName:c.name, tk:c._tk, st:(s.effective_status||'').toUpperCase(), bid:(s.bid_amount!=null&&+s.bid_amount>0)?+s.bid_amount:0, sp:parseFloat(r.spend)||0, imp:parseInt(r.impressions)||0, clk:parseInt(r.inline_link_clicks)||0, cpc:parseFloat(r.cpc)||0, ctr:parseFloat(r.ctr)||0 }); });
+      });
+      all.sort(function(a,b){ return b.sp-a.sp; });
+      if(!all.length){ box.innerHTML='<div class="ld">Nenhum conjunto encontrado.</div>'; return; }
+      var sel={}; _dd.adsets.forEach(function(a){ sel[String(a.id)]=1; });
+      var multi=camps.length>1;
+      var body=all.map(function(r){
+        var active=r.st==='ACTIVE';
+        var tgl=(r.st&&r.st!=='DISAPPROVED'&&r.st!=='WITH_ISSUES')?drillSwitch('set', r.id, active):'';
+        return '<tr><td><input type="checkbox" class="set-sel" data-id="'+r.id+'" data-name="'+escD(r.name).replace(/"/g,'&quot;')+'" data-tk="'+(r.tk||'')+'"'+(sel[String(r.id)]?' checked':'')+' style="width:18px;height:18px;accent-color:var(--ub-blue)"></td>'
+          +'<td style="font-weight:600;color:var(--ub-ink);max-width:230px;white-space:normal">'+escD(r.name||'(sem nome)')+(multi?'<div style="font-size:10px;color:var(--ub-mut);font-weight:400">'+escD(r.campName)+'</div>':'')+'</td>'
+          +'<td><span style="display:inline-flex;align-items:center;gap:8px">'+tgl+stBadge(r.st)+'</span></td>'
+          +'<td>'+(r.bid>0?fmtUSD(r.bid/100):'&mdash;')+'</td><td>'+fmtUSD(r.sp)+'</td><td>'+r.imp.toLocaleString('pt-BR')+'</td><td>'+r.clk.toLocaleString('pt-BR')+'</td><td>'+fmtUSD(r.cpc)+'</td><td>'+r.ctr.toFixed(2).replace('.',',')+'%</td></tr>';
       }).join('');
-      box.innerHTML = '<div class="drill-sec">' + rows.length + ' conjunto(s) &middot; toque na linha p/ ver os anúncios &middot; use o botão de status p/ pausar/ativar</div>'
-        + '<div class="tbl-wrap"><table><thead><tr><th>Conjunto</th><th>Status</th><th>Bid</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>CPC</th><th>CTR</th><th></th></tr></thead><tbody>' + body + '</tbody></table></div>';
-      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(ev){ ev.stopPropagation(); drillToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
-      box.querySelectorAll('.drill-row-click').forEach(function(tr){ tr.addEventListener('click', function(){ renderDrillAds(this.getAttribute('data-adset'), this.getAttribute('data-adname')); }); });
-    }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
+      box.innerHTML='<div class="drill-sec">'+all.length+' conjunto(s) &middot; marque p/ ver os anúncios</div>'
+        +'<div class="tbl-wrap"><table><thead><tr><th></th><th>Conjunto</th><th>Status</th><th>Bid</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>CPC</th><th>CTR</th></tr></thead><tbody>'+body+'</tbody></table></div>';
+      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(){ ddToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
+      box.querySelectorAll('.set-sel').forEach(function(ch){ ch.addEventListener('change', ddOnSetSel); });
+      ddSetsBar();
+    }).catch(function(e){ box.innerHTML='<div class="ld" style="color:#cf222e">Erro: '+((e&&e.message)||e)+'</div>'; });
   }
-  function renderDrillAds(adsetId, adsetName) {
-    var c = cboData[_drill.campIdx]; if (!c) return;
-    _drill.adsetId = adsetId; _drill.adsetName = adsetName; drillPath();
-    var box = document.getElementById('drillBody'); if (!box) return;
-    box.innerHTML = '<div class="ld"><span class="spin"></span> Carregando anúncios&hellip;</div>';
-    var url = API + '/' + c.id + '/insights?level=ad&fields=ad_id,ad_name,adset_id,spend,impressions,inline_link_clicks,cpc,ctr&' + drillRange() + '&limit=300&access_token=' + c._tk;
-    var pu = getPbUrl(), p = periodDates(), since, until;
-    if (p) { since = p.since; until = p.until; } else { var _t=new Date(Date.now()-3*3600000); until=_t.toISOString().slice(0,10); since=new Date(Date.now()-3*3600000-365*86400000).toISOString().slice(0,10); }
-    var vtP = pu ? fetch(pu + '/vturbic?since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
-    var pbP = pu ? fetch(pu + '/pbbreak?camp=' + encodeURIComponent(c.id) + '&since=' + since + '&until=' + until, {headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).catch(function(){return {};}) : Promise.resolve({});
-    /* status dos anúncios DESTE conjunto (p/ o toggle pausar/ativar) */
-    var stP = fjRetry(API + '/' + adsetId + '/ads?fields=id,effective_status&limit=300&access_token=' + c._tk).catch(function(){return {};});
-    Promise.all([fjRetry(url), vtP, pbP, stP]).then(function(res){
-      var d = res[0]||{}, byAd = (res[1]&&res[1].byAd)||{}, pbAd = (res[2]&&res[2].byAd)||{};
-      var stMap = {}; (((res[3]&&res[3].data))||[]).forEach(function(a){ stMap[String(a.id)] = (a.effective_status||'').toUpperCase(); });
-      if (d && d.error) { box.innerHTML = '<div class="ld" style="color:#cf222e">Erro da Meta: ' + (d.error.message||'') + '</div>'; return; }
-      var rows = ((d && d.data)||[]).filter(function(r){ return String(r.adset_id) === String(adsetId); });
-      if (!rows.length) { box.innerHTML = '<div class="drill-sec">Sem anúncios com dados neste conjunto no período.</div>'; return; }
-      rows.sort(function(a,b){ return (parseFloat(b.spend)||0) - (parseFloat(a.spend)||0); });
-      var body = rows.map(function(r){
-        var sp = parseFloat(r.spend)||0, imp = parseInt(r.impressions)||0, clk = parseInt(r.inline_link_clicks)||0, cpc = parseFloat(r.cpc)||0, ctr = parseFloat(r.ctr)||0;
-        var vt = byAd[String(r.ad_id)]; var ic = (vt && vt.clicks) ? vt.clicks : 0;
-        var pv = pbAd[String(r.ad_id)] || { sales:0, revenue:0 };
-        var st = stMap[String(r.ad_id)] || '';
-        var active = st==='ACTIVE';
-        var stTxt = st==='ACTIVE' ? '<span class="badge b-gr">Ativo</span>' : (st ? '<span class="badge b-gy">' + ({PAUSED:'Pausado',ADSET_PAUSED:'Pausado',CAMPAIGN_PAUSED:'Pausado',DISAPPROVED:'Reprovado',WITH_ISSUES:'Com erro'}[st]||st) + '</span>' : '&mdash;');
-        var tgl = (st && st!=='DISAPPROVED' && st!=='WITH_ISSUES') ? drillSwitch('ad', r.ad_id, active) : '';
-        return '<tr><td style="font-weight:600;color:var(--ub-ink);max-width:240px;white-space:normal">' + escD(r.ad_name||'(sem nome)') + '</td>'
-          + '<td><span style="display:inline-flex;align-items:center;gap:8px">' + tgl + stTxt + '</span></td>'
-          + '<td>' + fmtUSD(sp) + '</td><td>' + imp.toLocaleString('pt-BR') + '</td><td>' + clk.toLocaleString('pt-BR') + '</td>'
-          + '<td' + (ic>0?' style="font-weight:600"':'') + '>' + ic.toLocaleString('pt-BR') + '</td>'
-          + '<td' + (pv.sales>0?' style="color:#1a7f37;font-weight:600"':'') + '>' + (pv.sales||0) + '</td>'
-          + '<td' + (pv.revenue>0?' style="color:#1a7f37"':'') + '>' + (pv.revenue>0?fmtUSD(pv.revenue):'&mdash;') + '</td>'
-          + '<td>' + fmtUSD(cpc) + '</td><td>' + ctr.toFixed(2).replace('.',',') + '%</td></tr>';
+  function ddOnSetSel(){
+    var sel=[]; document.querySelectorAll('.set-sel:checked').forEach(function(x){ sel.push({ id:x.getAttribute('data-id'), name:x.getAttribute('data-name'), tk:x.getAttribute('data-tk') }); });
+    _dd.adsets=sel; ddChips(); ddSetsBar();
+  }
+  function ddSetsBar(){
+    var n=_dd.adsets.length;
+    var info=document.getElementById('setsSelInfo'); if(info) info.textContent = n?(n+' selecionado(s)'):'';
+    var pb=document.getElementById('setsPause'), ab=document.getElementById('setsActivate');
+    if(pb) pb.style.display=n?'inline-flex':'none'; if(ab) ab.style.display=n?'inline-flex':'none';
+  }
+  function renderAdsView(){
+    var sets=_dd.adsets;
+    var t=document.getElementById('adsTitle'); if(t) t.textContent = sets.length===1 ? sets[0].name : (sets.length+' conjuntos');
+    var box=document.getElementById('adsBody'); if(!box) return;
+    if(!sets.length){ box.innerHTML='<div class="ld">Selecione um conjunto na aba <b>Conjuntos</b>.</div>'; ddAdsBar(); return; }
+    box.innerHTML='<div class="ld"><span class="spin"></span> Carregando anúncios&hellip;</div>';
+    var p=periodDates(), since, until;
+    if(p){ since=p.since; until=p.until; } else { var _t=new Date(Date.now()-3*3600000); until=_t.toISOString().slice(0,10); since=new Date(Date.now()-3*3600000-365*86400000).toISOString().slice(0,10); }
+    var pu=getPbUrl();
+    var vtP=pu?fetch(pu+'/vturbic?since='+since+'&until='+until).then(function(r){return r.json();}).catch(function(){return{};}):Promise.resolve({});
+    var pbP=pu?fetch(pu+'/pbbreak?since='+since+'&until='+until).then(function(r){return r.json();}).catch(function(){return{};}):Promise.resolve({});
+    var fetches=sets.map(function(s){
+      return Promise.all([
+        fjRetry(API+'/'+s.id+'/insights?level=ad&fields=ad_id,ad_name,spend,impressions,inline_link_clicks,cpc,ctr&'+drillRange()+'&limit=300&access_token='+s.tk).catch(function(){return{};}),
+        fjRetry(API+'/'+s.id+'/ads?fields=id,effective_status&limit=300&access_token='+s.tk).catch(function(){return{};})
+      ]).then(function(r){ return { set:s, ins:(r[0]&&r[0].data)||[], st:(r[1]&&r[1].data)||[] }; });
+    });
+    Promise.all([Promise.all(fetches), vtP, pbP]).then(function(res){
+      var byAd=(res[1]&&res[1].byAd)||{}, pbAd=(res[2]&&res[2].byAd)||{}, all=[], multi=sets.length>1;
+      res[0].forEach(function(blk){ var stM={}; blk.st.forEach(function(a){ stM[String(a.id)]=(a.effective_status||'').toUpperCase(); });
+        blk.ins.forEach(function(r){ _dd.tkById[String(r.ad_id)]=blk.set.tk; var vt=byAd[String(r.ad_id)], pv=pbAd[String(r.ad_id)]||{sales:0,revenue:0};
+          all.push({ id:r.ad_id, name:r.ad_name, setName:blk.set.name, sp:parseFloat(r.spend)||0, imp:parseInt(r.impressions)||0, clk:parseInt(r.inline_link_clicks)||0, cpc:parseFloat(r.cpc)||0, ctr:parseFloat(r.ctr)||0, ic:(vt&&vt.clicks)||0, sales:pv.sales||0, rev:pv.revenue||0, st:stM[String(r.ad_id)]||'' }); }); });
+      all.sort(function(a,b){ return b.sp-a.sp; });
+      if(!all.length){ box.innerHTML='<div class="drill-sec">Sem anúncios com dados no período.</div>'; return; }
+      var body=all.map(function(r){
+        var active=r.st==='ACTIVE';
+        var tgl=(r.st&&r.st!=='DISAPPROVED'&&r.st!=='WITH_ISSUES')?drillSwitch('ad', r.id, active):'';
+        return '<tr><td style="font-weight:600;color:var(--ub-ink);max-width:220px;white-space:normal">'+escD(r.name||'(sem nome)')+(multi?'<div style="font-size:10px;color:var(--ub-mut);font-weight:400">'+escD(r.setName)+'</div>':'')+'</td>'
+          +'<td><span style="display:inline-flex;align-items:center;gap:8px">'+tgl+stBadge(r.st)+'</span></td>'
+          +'<td>'+fmtUSD(r.sp)+'</td><td>'+r.imp.toLocaleString('pt-BR')+'</td><td>'+r.clk.toLocaleString('pt-BR')+'</td>'
+          +'<td'+(r.ic>0?' style="font-weight:600"':'')+'>'+r.ic.toLocaleString('pt-BR')+'</td>'
+          +'<td'+(r.sales>0?' style="color:#1a7f37;font-weight:600"':'')+'>'+r.sales+'</td>'
+          +'<td'+(r.rev>0?' style="color:#1a7f37"':'')+'>'+(r.rev>0?fmtUSD(r.rev):'&mdash;')+'</td>'
+          +'<td>'+fmtUSD(r.cpc)+'</td><td>'+r.ctr.toFixed(2).replace('.',',')+'%</td></tr>';
       }).join('');
-      box.innerHTML = '<div class="drill-sec">' + rows.length + ' anúncio(s) &middot; use o botão de status p/ pausar/ativar &middot; IC = clique no botão (VTurb) &middot; Vendas/Fat. = postback</div>'
-        + '<div class="tbl-wrap"><table><thead><tr><th>Anúncio</th><th>Status</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>IC</th><th>Vendas</th><th>Fat.</th><th>CPC</th><th>CTR</th></tr></thead><tbody>' + body + '</tbody></table></div>';
-      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(ev){ ev.stopPropagation(); drillToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
-    }).catch(function(e){ box.innerHTML = '<div class="ld" style="color:#cf222e">Erro: ' + ((e&&e.message)||e) + '</div>'; });
+      box.innerHTML='<div class="drill-sec">'+all.length+' anúncio(s) &middot; IC = clique no botão (VTurb) &middot; Vendas/Fat. = postback</div>'
+        +'<div class="tbl-wrap"><table><thead><tr><th>Anúncio</th><th>Status</th><th>Gasto</th><th>Impressões</th><th>Cliques</th><th>IC</th><th>Vendas</th><th>Fat.</th><th>CPC</th><th>CTR</th></tr></thead><tbody>'+body+'</tbody></table></div>';
+      box.querySelectorAll('.drill-tgl').forEach(function(b){ b.addEventListener('click', function(){ ddToggle(this.getAttribute('data-kind'), this.getAttribute('data-id'), this.getAttribute('data-active')==='1'); }); });
+    }).catch(function(e){ box.innerHTML='<div class="ld" style="color:#cf222e">Erro: '+((e&&e.message)||e)+'</div>'; });
+  }
+  function ddAdsBar(){ var pb=document.getElementById('adsPause'), ab=document.getElementById('adsActivate'); if(pb) pb.style.display='none'; if(ab) ab.style.display='none'; }
+  /* pausar/ativar em MASSA os conjuntos/anúncios selecionados */
+  function ddBulk(kind, status){
+    var ids = kind==='set' ? _dd.adsets.map(function(a){return{id:a.id,tk:a.tk};}) : [];
+    if(!ids.length) return;
+    var i=0; (function next(){ if(i>=ids.length){ renderSetsView(); return; } var it=ids[i++]; withTokenFallback(it.tk, function(t){ return postForm(it.id, t, { status:status }); }).then(next).catch(next); })();
+  }
+  /* Card/detalhe "Conjuntos": seleciona só aquela campanha e abre a subaba Conjuntos. */
+  function ddOpenCamp(i){
+    if(isNaN(i) || !cboData[i]) return;
+    _dd.camps=[i]; _dd.adsets=[];
+    document.querySelectorAll('.cbo-sel').forEach(function(x){ x.checked = (parseInt(x.getAttribute('data-i'))===i); });
+    if(window._updateCboSelBar) window._updateCboSelBar();
+    ddChips(); ddSub('sets');
   }
 
   /* ── Posicionamento robusto do tooltip de vendas (Problema 1) ──
@@ -3984,7 +4078,7 @@ html,body{background:var(--ub-bg)!important}
     var bRename = document.getElementById('detRename');
     if (bRename) bRename.addEventListener('click', function(){ closeCboDetail(); renameCampaign(i); });
     var bSets = document.getElementById('detSets');
-    if (bSets) bSets.addEventListener('click', function(){ closeCboDetail(); openDrill(i); });
+    if (bSets) bSets.addEventListener('click', function(){ closeCboDetail(); ddOpenCamp(i); });
     var bTgl = document.getElementById('detTgl');
     if (bTgl) bTgl.addEventListener('click', function(){ closeCboDetail(); toggleCampaign(i); });
     var bApply = document.getElementById('detApply');
@@ -5329,11 +5423,17 @@ html,body{background:var(--ub-bg)!important}
       renderOrc();
     });
   });
-  document.getElementById('btnRefresh').addEventListener('click', function() { if (curTab === 'cbo' || curTab === 'resumo') loadCBO(); else if (curTab === 'abo') loadABO(); else load(); });
+  (function(){ var br=document.getElementById('btnRefresh'); if(br) br.addEventListener('click', function() { if (curTab === 'cbo' || curTab === 'resumo') loadCBO(); else if (curTab === 'abo') loadABO(); else load(); }); })();
   (function(){ var br = document.getElementById('btnLoadResumo'); if (br) br.addEventListener('click', function(){ var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); }); })();
   document.getElementById('btnTokens').addEventListener('click', openModal);
   (function(){ var blc = document.getElementById('btnLoadCBO'); if (blc) blc.addEventListener('click', loadCBO); })();
-  (function(){ var db = document.getElementById('drillBack'); if (db) db.addEventListener('click', closeDrill); })();
+  /* Subabas (Campanhas/Conjuntos/Anúncios) + chips + pausar/ativar selecionados */
+  (function(){
+    document.querySelectorAll('#cboSub .st').forEach(function(b){ b.addEventListener('click', function(){ if(this.disabled) return; ddSub(this.getAttribute('data-sub')); }); });
+    document.querySelectorAll('#cboSub .chip .x').forEach(function(x){ x.addEventListener('click', function(ev){ ev.stopPropagation(); ddClear(this.getAttribute('data-clear')); }); });
+    var sp=document.getElementById('setsPause'); if(sp) sp.addEventListener('click', function(){ ddBulk('set','PAUSED'); });
+    var sa=document.getElementById('setsActivate'); if(sa) sa.addEventListener('click', function(){ ddBulk('set','ACTIVE'); });
+  })();
   /* PAUSAR/ATIVAR TUDO (so campanhas com CBO no nome). Age nas campanhas JA carregadas (cboData). */
   function bulkCBOStatus(newStatus) {
     if (!cboData || !cboData.length) { alert('Carregue as campanhas CBO primeiro (botão "Carregar campanhas CBO").'); return; }
@@ -5376,6 +5476,7 @@ html,body{background:var(--ub-bg)!important}
     var bar = document.getElementById('cboSelBar'), cnt = document.getElementById('cboSelCount');
     if (cnt) cnt.textContent = checked + (checked === 1 ? ' campanha selecionada' : ' campanhas selecionadas');
     if (bar) bar.style.display = checked > 0 ? 'flex' : 'none';
+    if (typeof ddOnCampSel === 'function') ddOnCampSel();
   }
   window._updateCboSelBar = updateCboSelBar;
   var _cboTb = document.getElementById('cboTbody');
