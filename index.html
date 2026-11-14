@@ -5144,6 +5144,23 @@ html,body{background:var(--ub-bg)!important}
       } catch(e){}
     }
     if ('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+    /* ===== WEB PUSH (app fechado): inscreve o celular no Worker. Chave pública VAPID (não é segredo). ===== */
+    var VAPID_PUBLIC='BG1w7yofw0vbpCIJkcd6xSbGOuXsrY35s5Ww5jzWI7dDTglApdYoJQ97PhZg1P897BhIJ5-x9Mw91zqJ6PYCUBw';
+    function urlB64ToUint8(s){ var pad='='.repeat((4-s.length%4)%4); var b=(s+pad).replace(/-/g,'+').replace(/_/g,'/'); var raw=atob(b); var out=new Uint8Array(raw.length); for(var i=0;i<raw.length;i++) out[i]=raw.charCodeAt(i); return out; }
+    function subscribeForPush(){
+      try {
+        if(!('serviceWorker' in navigator) || !('PushManager' in window)) { return Promise.resolve(false); }
+        return navigator.serviceWorker.ready.then(function(reg){
+          return reg.pushManager.getSubscription().then(function(sub){
+            if(sub) return sub;
+            return reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey: urlB64ToUint8(VAPID_PUBLIC) });
+          });
+        }).then(function(sub){
+          var u=getPbUrl(); if(!u||!sub) return false;
+          return fetch(u+'/subscribe', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(sub) }).then(function(){ return true; }).catch(function(){ return false; });
+        }).catch(function(){ return false; });
+      } catch(e){ return Promise.resolve(false); }
+    }
     var deferredPrompt=null;
     window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); deferredPrompt=e;
       var h=document.getElementById('notifInstallHint'); if(h){ h.style.display='block'; h.innerHTML='📲 Dá pra <b>instalar como app</b> neste aparelho. <a href="#" id="notifInstallBtn" style="color:#005AE3;font-weight:700">Instalar agora</a>';
@@ -5151,9 +5168,20 @@ html,body{background:var(--ub-bg)!important}
     function updateStatus(){ var s=document.getElementById('notifStatus'); if(!s) return; var perm=('Notification' in window)?Notification.permission:'unsupported'; s.textContent = perm==='granted'?'✓ Notificações ativas':(perm==='denied'?'Notificações bloqueadas no navegador':'Notificações desativadas'); }
     function wire(){
       var en=document.getElementById('notifEnable');
-      if(en) en.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); audioCtx.resume&&audioCtx.resume(); }catch(e){} if('Notification' in window){ Notification.requestPermission().then(updateStatus); } else updateStatus(); });
+      if(en) en.addEventListener('click', function(){
+        try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); audioCtx.resume&&audioCtx.resume(); }catch(e){}
+        if('Notification' in window){
+          Notification.requestPermission().then(function(perm){
+            updateStatus();
+            if(perm==='granted'){
+              var s=document.getElementById('notifStatus'); if(s) s.textContent='✓ Ativando push no celular…';
+              subscribeForPush().then(function(ok){ if(s) s.textContent= ok ? '✓ Notificações ativas (também com o app fechado)' : '✓ Notificações ativas (push em segundo plano indisponível aqui)'; });
+            }
+          });
+        } else updateStatus();
+      });
       var tt=document.getElementById('notifTest');
-      if(tt) tt.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); pushNotif('💰 Teste de venda','Som e notificação funcionando.'); });
+      if(tt) tt.addEventListener('click', function(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} playCash(); pushNotif('💰 Teste de venda','Som e notificação funcionando.'); try{ var u=getPbUrl(); if(u) fetch(u+'/pushtest').catch(function(){}); }catch(e){} });
       var cl=document.getElementById('notifClear');
       if(cl) cl.addEventListener('click', function(){ setList([]); setUnread(0); renderList(); });
       updateStatus(); setBadge(); renderList();
