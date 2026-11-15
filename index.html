@@ -214,8 +214,8 @@ html,body{background:var(--ub-bg)!important}
 #mdb .udb-content{padding:20px 22px 40px;flex:1;min-width:0}
 #mdb .udb-backdrop{display:none;position:fixed;inset:0;background:rgba(20,22,34,.45);z-index:35}
 /* ---- re-skin componentes existentes ---- */
-#mdb .metrics{gap:14px;margin-bottom:18px}
-#mdb .mc{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:14px;box-shadow:0 2px 8px rgba(34,41,47,.05)}
+#mdb .metrics{gap:16px;margin-bottom:18px;grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+#mdb .mc{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:14px;box-shadow:0 2px 8px rgba(34,41,47,.05);padding:17px 22px}
 #mdb .mc:hover{box-shadow:0 4px 24px rgba(34,41,47,.09);border-color:#dfe4ec;transform:translateY(-2px)}
 #mdb .mc-l{text-transform:none;letter-spacing:0;font-size:12px;font-weight:500;color:var(--ub-ink2)}
 #mdb .mc-v{font-size:23px;font-weight:700;color:var(--ub-ink)}
@@ -3387,13 +3387,21 @@ html,body{background:var(--ub-bg)!important}
         +'<td>'+(r.roas>0?'<span class="'+rc+'">'+r.roas.toFixed(2).replace('.',',')+'</span>':'---')+'</td></tr>';
     }).join('');
   }
+  /* Top ads NÃO busca sozinho (economia de token Meta). Mostra botão; só busca ao clicar. Fica cacheado por período. */
   function renderResumoTopAds(){
     var body=document.getElementById('resumoTopAdsBody'); if(!body) return;
     if(!cboData.length || !hasConv()){ body.innerHTML='<tr><td colspan="7" class="ld">Sem dados ainda.</td></tr>'; return; }
     var per=periodLabel();
     if(_topAds.period===per && _topAds.rows){ paintTopAds(_topAds.rows); return; }
+    if(_topAds.loading){ body.innerHTML='<tr><td colspan="7" class="ld"><span class="spin"></span> Carregando top anúncios…</td></tr>'; return; }
+    body.innerHTML='<tr><td colspan="7" class="ld" style="padding:16px"><button class="btn btn-blue" id="btnTopAds">&#8681; Carregar top ads</button><div style="font-size:11px;color:var(--ub-mut);margin-top:8px">usa a API da Meta &mdash; carregue quando quiser</div></td></tr>';
+    var _b=document.getElementById('btnTopAds'); if(_b) _b.addEventListener('click', loadResumoTopAds);
+  }
+  function loadResumoTopAds(){
+    var body=document.getElementById('resumoTopAdsBody'); if(!body || !cboData.length) return;
     if(_topAds.loading) return;
     _topAds.loading=true;
+    var per=periodLabel();
     body.innerHTML='<tr><td colspan="7" class="ld"><span class="spin"></span> Carregando top anúncios…</td></tr>';
     var _pd=periodDates(), rangeP;
     if(_pd){ rangeP='time_range='+encodeURIComponent(JSON.stringify({since:_pd.since,until:_pd.until})); }
@@ -5313,8 +5321,13 @@ html,body{background:var(--ub-bg)!important}
             var by=(d&&d.byCamp)||{}, totSales=0, totRev=0;
             Object.keys(by).forEach(function(k){ totSales+=(by[k].sales||0); totRev+=(by[k].revenue||0); });
             var prev=null; try { prev=JSON.parse(localStorage.getItem(LS_SEEN)||'null'); } catch(e){}
-            if (prev && typeof prev.sales==='number'){ var delta=totSales-prev.sales; if (delta>0) onNewSales(delta, Math.max(0,totRev-(prev.rev||0))); }
-            localStorage.setItem(LS_SEEN, JSON.stringify({ sales:totSales, rev:totRev }));
+            /* MARCA D'ÁGUA: só notifica quando o total PASSA do máximo já visto hoje. Assim, se o /pbsales
+               cair p/ 0 (ex.: worker com erro) e voltar, NÃO re-notifica a mesma venda (fim do duplicado). */
+            var pmax = prev ? (prev.max!=null ? prev.max : (prev.sales||0)) : null;
+            var pmaxRev = prev ? (prev.maxRev!=null ? prev.maxRev : (prev.rev||0)) : 0;
+            if (pmax!=null && totSales > pmax){ onNewSales(totSales - pmax, Math.max(0, totRev - pmaxRev)); }
+            var nmax = Math.max(pmax!=null?pmax:0, totSales), nmaxRev = Math.max(pmaxRev, totRev);
+            localStorage.setItem(LS_SEEN, JSON.stringify({ sales:totSales, rev:totRev, max:nmax, maxRev:nmaxRev }));
           }).catch(function(){});
       } catch(e){}
     }
@@ -5644,10 +5657,9 @@ html,body{background:var(--ub-bg)!important}
      No mobile o refresh e manual (trocar de aba / recarregar a pagina). */
   var isMobile = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || window.innerWidth < 820;
   if (!isMobile) {
-    timer = setInterval(function() {
-      if (curTab === 'contas') load();
-      else if ((curTab === 'cbo' || curTab === 'resumo') && cboData.length && getTks() && getTks().length) loadCBO();
-    }, 5*60*1000);
+    /* Auto-refresh SÓ na aba Contas. Dashboard/Campanhas atualizam no botão Atualizar (evita estourar o
+       limite da Meta no tier development_access, que derrubava o carregamento dos gastos). */
+    timer = setInterval(function() { if (curTab === 'contas') load(); }, 5*60*1000);
   }
 })();
 </script>
