@@ -1982,7 +1982,11 @@ html,body{background:var(--ub-bg)!important}
     function fetchAccount(gr) {
       var acct = gr.acctId, tk = gr.tk;
       var offBr = gr.offset != null && Number(gr.offset) !== -3;
-      var useHourly = !!(singleDay && offBr);
+      /* DESLIGADO (15/11): a Meta NÃO entrega os dados POR HORA do dia atual completos (chegam com atraso),
+         então a agregação pro dia BR SUBCONTAVA o gasto de hoje (ex.: $14 em vez de $103). Usamos o gasto
+         DIÁRIO (time_range do dia), que é completo e bate com o Gerenciador de Anúncios da Meta. Pra contas
+         em São Paulo (-3) já é o dia BR exato; pras contas US é o dia da conta (diferença só na virada). */
+      var useHourly = false; /* era: !!(singleDay && offBr) */
       var lifeUrl = API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend'+(isLifetime?',clicks,inline_link_clicks,cost_per_inline_link_click,inline_link_click_ctr,impressions,frequency':'')+'&time_range='+totalRange+'&limit=500&access_token='+tk;
       var periodUrl = useHourly
         ? (API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend,clicks,inline_link_clicks,impressions&time_increment=1&breakdowns=hourly_stats_aggregated_by_advertiser_time_zone&time_range='+hourlyWide+'&limit=500&access_token='+tk)
