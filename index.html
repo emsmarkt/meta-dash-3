@@ -362,7 +362,7 @@ html,body{background:var(--ub-bg)!important}
       <span class="udb-badge" id="resumoPeriodBadge" style="background:#eef3ff;color:var(--ub-blue);border-color:#d4e2ff">Hoje</span>
       <div class="udb-tb">
         <select class="ctrl udb-ctrl" id="resumoPeriodSel" style="width:auto;min-width:150px"><option value="today">Hoje</option><option value="yesterday">Ontem</option><option value="custom">Personalizado</option></select>
-        <span id="spinResumo" class="spin" style="display:none"></span>
+        <button class="btn btn-blue" id="btnLoadResumo"><span id="spinResumo" class="spin" style="display:none"></span>&#8635; Atualizar</button>
       </div>
     </div>
     <div id="resumoCustomRange" style="display:none;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap">
@@ -434,7 +434,7 @@ html,body{background:var(--ub-bg)!important}
           <label id="autoApplyWrap" title="Interruptor LIVE/DRY do robô. LIGADO = o robô APLICA as regras de verdade a cada 5 min (APPLY_MODE=live). DESLIGADO = só simula (dry)." style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ub-ink2);cursor:pointer;user-select:none;padding:7px 11px;border:1px solid var(--ub-inp);border-radius:8px">
             <span class="md-switch"><input type="checkbox" id="autoApplyChk"><span class="md-slider"></span></span> <span id="autoApplyTxt" style="font-weight:600">Robô: —</span>
           </label>
-          <span id="spinCBO" class="spin" style="display:none"></span>
+          <button class="btn btn-blue" id="btnLoadCBO"><span id="spinCBO" class="spin" style="display:none"></span>&#8635; Atualizar</button>
         </div>
       </div>
       <div class="udb-filters">
@@ -4023,6 +4023,16 @@ html,body{background:var(--ub-bg)!important}
       : ((isLifeD && camp._capUnknown) ? '⏳ verificando…' : 'sem limite');
     var rememberedD = getDayCap(camp);
     var capPre = rememberedD > 0 ? Math.round(rememberedD) : '';
+    /* Orçamento diário DESEJADO (muda o diário distribuindo o restante -> recalcula o término). Só vitalícia. */
+    if (isLifeD) {
+      body += '<div class="det-row" style="align-items:center"><span class="det-k">Orçamento diário desejado</span>'
+            + '<span class="det-v" style="display:flex;align-items:center;gap:6px;justify-content:flex-end">'
+            + '<span style="font-size:11px;color:#656d76">$</span>'
+            + '<input class="cbo-inp" id="detDaily" type="number" min="1" step="any" placeholder="ex: 100" style="width:74px" title="Quanto quer rodar por DIA. O dash recalcula a data de término p/ distribuir o orçamento restante.">'
+            + '<button class="save-btn" id="detDailySave" style="padding:5px 10px">Aplicar</button>'
+            + '</span></div>'
+            + '<div style="font-size:10px;color:#656d76;text-align:right;margin-top:-3px">muda o diário distribuindo o orçamento restante (recalcula o término)</div>';
+    }
     body += '<div class="det-row" style="align-items:center"><span class="det-k">Rodar hoje ($)</span>'
           + '<span class="det-v" style="display:flex;align-items:center;gap:6px;justify-content:flex-end">'
           + '<span style="font-size:11px;color:#656d76" title="teto de gasto atual dos conjuntos ativos">' + capCurTxt + '</span>'
@@ -4085,6 +4095,14 @@ html,body{background:var(--ub-bg)!important}
     if (bTgl) bTgl.addEventListener('click', function(){ closeCboDetail(); toggleCampaign(i); });
     var bApply = document.getElementById('detApply');
     if (bApply) bApply.addEventListener('click', function(){ closeCboDetail(); saveCBODate(i); });
+    var bDaily = document.getElementById('detDailySave');
+    if (bDaily) bDaily.addEventListener('click', function(){
+      var v = parseFloat((document.getElementById('detDaily')||{}).value) || 0;
+      if (!(v > 0)) { alert('Digite o orçamento diário desejado (US$). Ex: 100'); return; }
+      var inp = document.getElementById('cdaily_'+i);
+      if (inp) { inp.value = v; if (typeof calcCBORow === 'function') calcCBORow(i, 'daily'); }
+      closeCboDetail(); saveCBODate(i);
+    });
     var bSug = document.getElementById('detSug');
     if (bSug) bSug.addEventListener('click', function(){ closeCboDetail(); applyRuleSuggestion(i); });
     var bBid = document.getElementById('detBidSave');
