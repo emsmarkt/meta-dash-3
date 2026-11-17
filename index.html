@@ -72,6 +72,10 @@
   #mdb .foot-note{font-size:10px}
   /* ---- Item 3: areas de toque confortaveis (~38-40px) sem inflar desktop ---- */
   #mdb .tgl-btn{padding:9px 12px;font-size:12px;min-height:38px}
+  #mdb .cbo-sw{width:50px;height:30px}
+  #mdb .cbo-sw::after{width:24px;height:24px}
+  #mdb .cbo-sw.on::after{left:23px}
+  #mdb .crename{opacity:.6;font-size:16px;margin-left:10px}
   #mdb td #csug_0,#mdb .sugcell .save-btn,#mdb td .save-btn{padding:8px 12px;font-size:12px;min-height:38px}
   #mdb .save-btn{padding:9px 13px;font-size:12px;min-height:38px}
   #mdb .cbo-date{padding:9px 9px;font-size:12px;min-height:38px}
@@ -223,9 +227,9 @@ html,body{background:var(--ub-bg)!important}
 #mdb .cbo-info{background:#f4f8fe;border:1px solid #cfe0fb;border-left:3px solid var(--ub-blue);border-radius:0 10px 10px 0;color:#415574}
 #mdb .cbo-info strong{color:#0d2c54}
 #mdb .tbl-wrap{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:16px;box-shadow:0 2px 8px rgba(34,41,47,.05)}
-#mdb th{background:var(--ub-th);color:var(--ub-ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--ub-line);padding:12px 14px}
+#mdb th{background:var(--ub-th);color:var(--ub-mut);font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--ub-line);padding:13px 16px}
 #mdb thead th:first-child,#mdb thead tr:first-child th{background:var(--ub-th)}
-#mdb td{padding:12px 14px;border-bottom:1px solid var(--ub-line2);color:var(--ub-ink);font-variant-numeric:tabular-nums}
+#mdb td{padding:14px 16px;border-bottom:1px solid var(--ub-line2);color:var(--ub-ink);font-variant-numeric:tabular-nums}
 /* linhas verticais separando as colunas (melhor leitura) */
 #mdb #tab-cbo th,#mdb #tab-cbo td{border-right:1px solid var(--ub-line2)}
 #mdb #tab-cbo th:last-child,#mdb #tab-cbo td:last-child{border-right:none}
@@ -255,6 +259,16 @@ html,body{background:var(--ub-bg)!important}
 #mdb .md-switch input:checked + .md-slider{background:var(--ub-blue)}
 #mdb .tgl-btn.tgl-off{background:var(--ub-green-soft);color:var(--ub-green-d)}
 #mdb .tgl-btn.tgl-on{background:var(--ub-red-soft);color:var(--ub-red)}
+/* toggle switch estilo UTMify (status da campanha) */
+#mdb .cbo-sw{position:relative;display:inline-block;width:40px;height:23px;border-radius:999px;border:none;padding:0;cursor:pointer;background:#cfd3db;transition:background .16s;vertical-align:middle;flex:0 0 auto}
+#mdb .cbo-sw::after{content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.28);transition:left .16s}
+#mdb .cbo-sw.on{background:var(--ub-blue)}
+#mdb .cbo-sw.on::after{left:19.5px}
+#mdb .cbo-sw:disabled{opacity:.55;cursor:wait}
+/* lápis p/ renomear: aparece ao passar o mouse na linha */
+#mdb .crename{display:inline-block;margin-left:7px;color:var(--ub-blue);cursor:pointer;opacity:0;transition:opacity .13s;font-size:13px;vertical-align:baseline;user-select:none}
+#mdb #cboTbody tr:hover .crename{opacity:.6}
+#mdb .crename:hover{opacity:1}
 #mdb .d-good{color:var(--ub-green-d)}#mdb .d-bad{color:var(--ub-red)}#mdb .d-warn{color:#c56a12}
 #mdb .modal{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:14px}
 #mdb .modal h2{color:var(--ub-ink)}
@@ -3178,9 +3192,9 @@ html,body{background:var(--ub-bg)!important}
       var bl = 'border-left:1px solid var(--ub-line)';
       return '<tr data-cbo="'+i+'" data-status="'+st.group+'" data-error="'+(st.isError?'1':'')+'" data-acct="'+String(camp._acctId||'').replace(/"/g,'')+'" data-name="'+camp.name.toLowerCase().replace(/"/g,'&quot;')+'">' +
         /* 1 Status (checkbox + badge + toggle) */
-        '<td><div style="display:flex;align-items:flex-start;gap:7px"><input type="checkbox" class="cbo-sel" data-i="'+i+'" title="Selecionar campanha" style="width:16px;height:16px;accent-color:var(--ub-blue);margin-top:2px;cursor:pointer;flex:0 0 auto"><div>'+stBadge+(st.note?'<div style="font-size:10px;color:'+(st.noteCls==='ok'?'#57606a':(st.noteCls==='warn'?'#9a6700':'#cf222e'))+';margin-top:2px;white-space:nowrap">'+st.note+'</div>':'')+'<div style="margin-top:5px"><button class="tgl-btn '+(((camp.status||"").toUpperCase()==="ACTIVE")?"tgl-on":"tgl-off")+'" id="ctgl_'+i+'">'+(((camp.status||"").toUpperCase()==="ACTIVE")?"⏸ Pausar":"▶ Ativar")+'</button></div></div></div></td>' +
+        '<td><div style="display:flex;align-items:flex-start;gap:9px"><input type="checkbox" class="cbo-sel" data-i="'+i+'" title="Selecionar campanha" style="width:16px;height:16px;accent-color:var(--ub-blue);margin-top:4px;cursor:pointer;flex:0 0 auto"><div><button class="cbo-sw '+(((camp.status||"").toUpperCase()==="ACTIVE")?"on":"")+'" id="ctgl_'+i+'" title="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar campanha no Meta":"Ativar campanha no Meta")+'" aria-label="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar":"Ativar")+'"></button><div style="margin-top:7px">'+stBadge+'</div>'+(st.note?'<div style="font-size:10px;color:'+(st.noteCls==='ok'?'#57606a':(st.noteCls==='warn'?'#9a6700':'#cf222e'))+';margin-top:3px;white-space:nowrap">'+st.note+'</div>':'')+'</div></div></td>' +
         /* 2 Campanha */
-        '<td style="font-weight:500;color:#0d1117;max-width:300px;white-space:normal;line-height:1.35" title="'+name+'"><span class="cexp" data-exp="'+i+'" title="Detalhes: por anúncio e por país" style="cursor:pointer;color:#0969da;font-weight:800;margin-right:6px;user-select:none;display:inline-block">▾</span>'+name+'</td>' +
+        '<td style="font-weight:500;color:#0d1117;max-width:300px;white-space:normal;line-height:1.35" title="'+name+'"><span class="cexp" data-exp="'+i+'" title="Detalhes: por anúncio e por país" style="cursor:pointer;color:#0969da;font-weight:800;margin-right:6px;user-select:none;display:inline-block">▾</span>'+name+'<span class="crename" data-ren="'+i+'" title="Renomear campanha">✎</span></td>' +
         /* 3 Conta */
         '<td style="font-size:12px;color:#57606a;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="'+acctName+'">'+acctName+'</td>' +
         /* 4 Últ. Atualiz. */
@@ -3278,12 +3292,15 @@ html,body{background:var(--ub-bg)!important}
       /* Seta ▾ -> abre/fecha o detalhe INLINE (por anúncio / por país). stopPropagation p/ não abrir o card. */
       var cexp = document.querySelector('#cboTbody tr[data-cbo="'+i+'"] .cexp');
       if (cexp) cexp.addEventListener('click', function(e){ e.stopPropagation(); toggleCampDetail(i); });
+      /* Lápis -> renomear (não abre o card de detalhe). */
+      var cren = document.querySelector('#cboTbody tr[data-cbo="'+i+'"] .crename');
+      if (cren) cren.addEventListener('click', function(e){ e.stopPropagation(); renameCampaign(i); });
       /* Item 4 (mobile): toque na 1a coluna (campanha) abre o card de detalhes.
          So vincula em touch p/ nao mudar nada no desktop. */
       if (isTouchDevice()) {
         var tr = document.querySelector('#cboTbody tr[data-cbo="'+i+'"]');
         var nameCell = tr ? tr.cells[1] : null; /* célula da Campanha (0 = Status/checkbox) */
-        if (nameCell) nameCell.addEventListener('click', function(e) { if (e.target && (e.target.classList.contains('cbo-sel') || e.target.classList.contains('tgl-btn'))) return; openCboDetail(i); });
+        if (nameCell) nameCell.addEventListener('click', function(e) { if (e.target && (e.target.classList.contains('cbo-sel') || e.target.classList.contains('tgl-btn') || e.target.classList.contains('cbo-sw') || e.target.classList.contains('crename'))) return; openCboDetail(i); });
       }
     });
     bindSaleTips();
@@ -4631,20 +4648,15 @@ html,body{background:var(--ub-bg)!important}
     var novo = isActive ? 'PAUSED' : 'ACTIVE';
     if (!confirm((isActive ? 'PAUSAR' : 'ATIVAR') + ' a campanha "' + camp.name + '" no Meta?')) return;
     var btn = document.getElementById('ctgl_' + i);
-    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    if (btn) { btn.disabled = true; btn.classList.toggle('on', novo === 'ACTIVE'); }
     withTokenFallback(camp._tk, function(tk){ return postForm(camp.id, tk, { status: novo }); })
       .then(function(r){
         camp._tk = r.tk; camp.status = novo; camp.effective_status = novo;
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = (novo === 'ACTIVE') ? '⏸ Pausar' : '▶ Ativar';
-          btn.className = 'tgl-btn ' + (novo === 'ACTIVE' ? 'tgl-on' : 'tgl-off');
-        }
-        /* atualiza o badge de status da linha */
+        /* renderCBO() reconstrói a linha com o switch no estado novo */
         renderCBO();
       })
       .catch(function(e){
-        if (btn) { btn.disabled = false; btn.textContent = isActive ? '⏸ Pausar' : '▶ Ativar'; }
+        if (btn) { btn.disabled = false; btn.classList.toggle('on', isActive); }
         var msg = (e && e.message) ? e.message : 'erro';
         var extra = /application has been deleted|validating application|access token|OAuth|code 190/i.test(msg) ? '\n\n>>> TOKEN INVALIDO: gere um token novo p/ esse BM em ⚙ Tokens.' : '';
         alert('Nao consegui ' + (isActive ? 'pausar' : 'ativar') + ' "' + camp.name + '":\n' + msg + extra);
