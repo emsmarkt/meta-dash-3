@@ -269,6 +269,9 @@ html,body{background:var(--ub-bg)!important}
 #mdb .crename{display:inline-block;margin-left:7px;color:var(--ub-blue);cursor:pointer;opacity:0;transition:opacity .13s;font-size:13px;vertical-align:baseline;user-select:none}
 #mdb #cboTbody tr:hover .crename{opacity:.6}
 #mdb .crename:hover{opacity:1}
+/* link "Histórico" por campanha (abre o histórico daquela campanha) */
+#mdb .chist{display:inline-block;font-size:10.5px;font-weight:600;color:var(--ub-ink2);cursor:pointer;opacity:.75;transition:color .13s,opacity .13s;user-select:none}
+#mdb .chist:hover{color:var(--ub-blue);opacity:1}
 #mdb .d-good{color:var(--ub-green-d)}#mdb .d-bad{color:var(--ub-red)}#mdb .d-warn{color:#c56a12}
 #mdb .modal{background:var(--ub-card);border:1px solid var(--ub-line);border-radius:14px}
 #mdb .modal h2{color:var(--ub-ink)}
@@ -351,8 +354,6 @@ html,body{background:var(--ub-bg)!important}
         <button class="tab-btn on" data-tab="resumo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard</button>
         <button class="tab-btn" data-tab="contas"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v11h14V9"/></svg> Contas</button>
         <button class="tab-btn" data-tab="cbo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg> Campanhas (CBO)</button>
-        <button class="tab-btn" data-tab="orc"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg> Or&ccedil;amento</button>
-        <button class="tab-btn" data-tab="hist"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> Hist&#243;rico</button>
         <button class="tab-btn" data-tab="notif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg> Notifica&#231;&#245;es <span class="bdg" id="notifBadge" style="display:none">0</span></button>
       </nav>
       <div class="udb-sbfoot">
@@ -456,7 +457,6 @@ html,body{background:var(--ub-bg)!important}
         <div class="udb-fg"><label>Status da Campanha</label><select class="ctrl udb-ctrl" id="cboStatusSel"><option value="all">Qualquer</option><option value="active">Ativo</option><option value="paused">Pausado</option><option value="error">Com erro</option><option value="teste">TESTE</option></select></div>
         <div class="udb-fg"><label>Período de Visualização</label><select class="ctrl udb-ctrl" id="cboPeriodSel"><option value="today" selected>Hoje</option><option value="yesterday">Ontem</option><option value="last_7d">Últimos 7 dias</option><option value="last_30d">Últimos 30 dias</option><option value="lifetime">Máximo</option><option value="custom">Personalizado</option></select></div>
         <div class="udb-fg"><label>Conta de Anúncio</label><select class="ctrl udb-ctrl" id="cboAcctSel"><option value="">Qualquer</option></select></div>
-        <div class="udb-fg"><label>Produto</label><select class="ctrl udb-ctrl" id="cboProdSel"><option value="">Qualquer</option></select></div>
       </div>
       <div id="customRange" style="display:none;align-items:center;gap:6px;margin-top:12px">
         <span style="font-size:12px;color:var(--ub-ink2)">De</span>
@@ -479,13 +479,10 @@ html,body{background:var(--ub-bg)!important}
       <table>
         <thead>
           <tr>
-            <th>Status</th>
             <th>Campanha</th>
             <th>Conta</th>
             <th title="Última alteração da campanha">Últ. Atualiz.</th>
             <th title="Orçamento vitalício da campanha (editável)">Or&ccedil;amento</th>
-            <th title="Gasto total acumulado (vitalício)">Gasto Total</th>
-            <th title="Orçamento vitalício − gasto total">Saldo</th>
             <th style="border-left:1px solid var(--ub-line);cursor:pointer;user-select:none" data-sort="sales" id="thVendas">Vendas &#8645;</th>
             <th style="cursor:pointer;user-select:none" data-sort="cpa" id="thCPA">CPA &#8645;</th>
             <th title="Gasto no período (Meta)">Gastos</th>
@@ -514,7 +511,7 @@ html,body{background:var(--ub-bg)!important}
             <th>Aplicar</th>
           </tr>
         </thead>
-        <tbody id="cboTbody"><tr><td colspan="33" class="ld"><span class="spin"></span> Carregando campanhas&hellip;</td></tr></tbody>
+        <tbody id="cboTbody"><tr><td colspan="30" class="ld"><span class="spin"></span> Carregando campanhas&hellip;</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -549,38 +546,6 @@ html,body{background:var(--ub-bg)!important}
         <tbody id="aboTbody"><tr><td colspan="9" class="ld">Clique em "Carregar campanhas ABO" para iniciar.</td></tr></tbody>
       </table>
     </div>
-  </div>
-  <div class="tab-pane" id="tab-hist">
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
-      <input class="srch" id="histSrch" type="text" placeholder="Buscar campanha..." style="max-width:260px">
-      <span style="font-size:12px;color:#656d76">Dia:</span>
-      <input type="date" id="histDay" class="cbo-date" style="width:150px;cursor:pointer">
-      <button class="pill" id="histDayClear">Todos os dias</button>
-      <span style="font-size:12px;color:#656d76;margin-left:6px">Origem:</span>
-      <button class="pill on" id="histSrcAll" data-src="all">Todas</button>
-      <button class="pill" id="histSrcManual" data-src="manual">&#9995; Manual</button>
-      <button class="pill" id="histSrcRobo" data-src="robo">&#129302; Rob&#244;</button>
-      <span style="font-size:12px;color:#656d76;margin-left:6px">Estrutura:</span>
-      <select id="histTkSel" class="cbo-date" style="width:170px;cursor:pointer"><option value="all">Todas</option></select>
-      <span style="flex:1"></span>
-      <button class="btn" id="histClear" style="border-color:#cf222e;color:#cf222e">&#128465; Limpar hist&#243;rico</button>
-    </div>
-    <div id="histBody"></div>
-  </div>
-  <div class="tab-pane" id="tab-orc">
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
-      <input class="srch" id="orcSrch" type="text" placeholder="Buscar campanha..." style="max-width:260px">
-      <span style="font-size:12px;color:#656d76">Dia:</span>
-      <input type="date" id="orcDay" class="cbo-date" style="width:150px;cursor:pointer">
-      <button class="pill" id="orcDayClear">Todos os dias</button>
-      <span style="font-size:12px;color:#656d76;margin-left:6px">Origem:</span>
-      <button class="pill on" id="orcSrcAll" data-src="all">Todas</button>
-      <button class="pill" id="orcSrcManual" data-src="manual">&#9995; Manual</button>
-      <button class="pill" id="orcSrcRobo" data-src="robo">&#129302; Rob&#244;</button>
-      <span style="font-size:12px;color:#656d76;margin-left:6px">Estrutura:</span>
-      <select id="orcTkSel" class="cbo-date" style="width:170px;cursor:pointer"><option value="all">Todas</option></select>
-    </div>
-    <div id="orcBody"></div>
   </div>
   <div class="tab-pane" id="tab-notif">
     <div class="card udb-panel" style="margin-bottom:16px">
@@ -1882,7 +1847,7 @@ html,body{background:var(--ub-bg)!important}
     cboLoading = true;
     var spinEl = document.getElementById('spinCBO');
     if (spinEl) spinEl.style.display = 'inline-block';
-    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Buscando contas ativas...</td></tr>';
+    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld"><span class="spin"></span>Buscando contas ativas...</td></tr>';
     var map = {};
     var chain = fetchFxLive().catch(function(){}); /* puxa a cotacao USD/BRL ao vivo ANTES de converter os custos */
     tks.forEach(function(tk) {
@@ -1900,8 +1865,8 @@ html,body{background:var(--ub-bg)!important}
         var sp = 0; try { sp = (a.insights && a.insights.data && a.insights.data[0]) ? (parseFloat(a.insights.data[0].spend) || 0) : 0; } catch(e){}
         a._sp7d = sp; return (sp > 0 || a.account_status === 1) && acctAllowed(a); /* conta c/ gasto 7d OU ATIVA (p/ pegar campanha ativa de conta nova/parada que não gastou ainda) */
       });
-      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo(); return; }
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
+      if (!accounts.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld" style="color:#cf222e">Nenhuma conta ativa ou com gasto nos ultimos 7 dias.</td></tr>'; if (spinEl) spinEl.style.display='none'; var _s1=document.getElementById('spinResumo'); if(_s1)_s1.style.display='none'; cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo(); return; }
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld"><span class="spin"></span>Buscando campanhas CBO em '+accounts.length+' contas...</td></tr>';
       var camps = [];
       var idx = 0;
       function nextBatch() {
@@ -1951,7 +1916,7 @@ html,body{background:var(--ub-bg)!important}
       }
       return nextBatch();
     }).catch(function(e) {
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld" style="color:#cf222e">Erro: '+(e&&e.message?e.message:'desconhecido')+'</td></tr>';
       if (spinEl) spinEl.style.display='none';
       var _s2=document.getElementById('spinResumo'); if(_s2)_s2.style.display='none';
       cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
@@ -1960,7 +1925,7 @@ html,body{background:var(--ub-bg)!important}
 
   function fetchCBOSpend(camps) {
     if (!camps.length) {
-      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
+      document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld">Nenhuma campanha CBO encontrada nas contas ativas.</td></tr>';
       var spinEl = document.getElementById('spinCBO'); if (spinEl) spinEl.style.display='none';
       var _s3=document.getElementById('spinResumo'); if(_s3)_s3.style.display='none';
       cboLoading=false; cboLoaded=true; if(curTab==='resumo') renderResumo();
@@ -1986,7 +1951,7 @@ html,body{background:var(--ub-bg)!important}
        so as horas que caem no dia do Brasil (senao a Meta le o time_range no fuso da conta e desalinha). */
     var singleDay = (_pd && _pd.since === _pd.until) ? _pd.since : null;
     var hourlyWide = singleDay ? encodeURIComponent(JSON.stringify({ since: shiftDay(singleDay, -1), until: shiftDay(singleDay, 1) })) : null;
-    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld"><span class="spin"></span>Carregando metricas de '+camps.length+' campanhas CBO ('+periodLabel()+')...</td></tr>';
+    document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld"><span class="spin"></span>Carregando metricas de '+camps.length+' campanhas CBO ('+periodLabel()+')...</td></tr>';
     /* ===== OTIMIZACAO RATE LIMIT (level=campaign por CONTA) =====
        Em vez de 4 chamadas POR CAMPANHA, puxa por CONTA: gasto do periodo + gasto vitalicio + conjuntos +
        anuncios TODOS no nivel da conta (level=campaign / campaign_id), 1 chamada de cada por conta (paginada).
@@ -2709,6 +2674,49 @@ html,body{background:var(--ub-bg)!important}
     if (snap.length) out += '<div style="font-size:13px;color:#656d76;margin-top:3px">' + snap.join(' &middot; ') + '</div>';
     return out;
   }
+  /* Cor da ação no histórico por campanha. */
+  function histActColor(e){
+    var s = (e && e.sig || '').toUpperCase();
+    if (s==='PAUSE'||s==='CORTAR'||s==='LIMITAR') return '#cf222e';
+    if (s==='ACTIVATE'||s==='ESCALAR'||s==='AUMENTAR'||s==='MANTER') return '#1a7f37';
+    if (s==='RENAME') return '#0969da';
+    return '#1f2328';
+  }
+  /* Grava uma alteração simples (pausar/ativar/renomear) no histórico — local + Worker. */
+  function logActionHist(camp, action, sig, extra){
+    if (!camp) return;
+    var entry = { id: camp.id, name: camp.name || ('#'+camp.id), t: Date.now(), day: (typeof brDatePlus==='function'?brDatePlus(0):''), sig: sig||'', action: action||'', source: 'manual', tkId: histTkId(camp._tk), acct: camp._accountName || '' };
+    if (extra) { for (var k in extra) entry[k] = extra[k]; }
+    pushHist(entry);
+    var u = getWkUrl();
+    if (u) { try { fetch(u + '/history', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(entry) }).catch(function(){}); } catch(e){} }
+  }
+  /* Abre o histórico DAQUELA campanha (reusa o modal de detalhe). */
+  function openCampHist(i){
+    var camp = cboData[i]; if (!camp) return;
+    var m = document.getElementById('cboDetModal'); if (!m) return;
+    var tEl = document.getElementById('cboDetTitle'); if (tEl) tEl.textContent = 'Histórico — ' + (camp.name || 'Campanha');
+    var aEl = document.getElementById('cboDetAcct'); if (aEl) aEl.innerHTML = camp._accountName ? ('<span style="color:#656d76">'+camp._accountName+'</span>') : '';
+    var all = getHist().filter(function(e){ return String(e.id) === String(camp.id); });
+    all.sort(function(a,b){ return (b.t||0) - (a.t||0); });
+    var html;
+    if (!all.length) {
+      html = '<div style="padding:18px 4px;color:#656d76;font-size:13px">Nenhuma alteração registrada para esta campanha ainda.<br><span style="font-size:11px">Pausar/ativar, renomear, mudar orçamento ou término aparecem aqui.</span></div>';
+    } else {
+      html = all.map(function(e){
+        var w = new Date(e.t||Date.now());
+        var dstr = ('0'+w.getDate()).slice(-2)+'/'+('0'+(w.getMonth()+1)).slice(-2)+' '+('0'+w.getHours()).slice(-2)+':'+('0'+w.getMinutes()).slice(-2);
+        var act = '<span style="font-weight:600;color:'+histActColor(e)+'">'+(e.action || e.sig || 'alteração')+'</span>';
+        return '<div style="padding:10px 2px;border-bottom:1px solid var(--ub-line2)">'
+          + '<div style="display:flex;justify-content:space-between;gap:8px;align-items:center">'
+          +   '<span style="font-size:13px">'+act+'</span>'
+          +   '<span style="font-size:11px;color:#656d76;white-space:nowrap">'+histSrcBadge(e)+' &middot; '+dstr+'</span>'
+          + '</div>' + histChangeHtml(e) + '</div>';
+      }).join('');
+    }
+    var bEl = document.getElementById('cboDetBody'); if (bEl) bEl.innerHTML = html;
+    m.classList.add('show');
+  }
   /* ===== Aba ORCAMENTO: so as entradas do historico que MUDARAM orcamento (dailyNew presente),
      em ordem cronologica (mais recente primeiro), com antes -> depois e origem. ===== */
   var orcSrc = 'all', orcTk = 'all', orcOpen = {};
@@ -3002,7 +3010,7 @@ html,body{background:var(--ub-bg)!important}
     /* Barra de diagnostico do RedTrack/Humor OCULTA (a pedido) — fica sempre escondida. */
     var diagEl = document.getElementById('rtDiag');
     if (diagEl) diagEl.style.display = 'none';
-    if (!cboData.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="33" class="ld">Nenhuma campanha CBO encontrada.</td></tr>'; return; }
+    if (!cboData.length) { document.getElementById('cboTbody').innerHTML = '<tr><td colspan="30" class="ld">Nenhuma campanha CBO encontrada.</td></tr>'; return; }
     sortCBO();
     var arrow = cboSort.dir === 'asc' ? ' &#9650;' : ' &#9660;';
     var thV = document.getElementById('thVendas'); if (thV) thV.innerHTML = 'Vendas' + (cboSort.key==='sales'?arrow:' &#8645;');
@@ -3192,19 +3200,20 @@ html,body{background:var(--ub-bg)!important}
       var bl = 'border-left:1px solid var(--ub-line)';
       return '<tr data-cbo="'+i+'" data-status="'+st.group+'" data-error="'+(st.isError?'1':'')+'" data-acct="'+String(camp._acctId||'').replace(/"/g,'')+'" data-name="'+camp.name.toLowerCase().replace(/"/g,'&quot;')+'">' +
         /* 1 Status (checkbox + badge + toggle) */
-        '<td><div style="display:flex;align-items:flex-start;gap:9px"><input type="checkbox" class="cbo-sel" data-i="'+i+'" title="Selecionar campanha" style="width:16px;height:16px;accent-color:var(--ub-blue);margin-top:4px;cursor:pointer;flex:0 0 auto"><div><button class="cbo-sw '+(((camp.status||"").toUpperCase()==="ACTIVE")?"on":"")+'" id="ctgl_'+i+'" title="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar campanha no Meta":"Ativar campanha no Meta")+'" aria-label="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar":"Ativar")+'"></button><div style="margin-top:7px">'+stBadge+'</div>'+(st.note?'<div style="font-size:10px;color:'+(st.noteCls==='ok'?'#57606a':(st.noteCls==='warn'?'#9a6700':'#cf222e'))+';margin-top:3px;white-space:nowrap">'+st.note+'</div>':'')+'</div></div></td>' +
-        /* 2 Campanha */
-        '<td style="font-weight:500;color:#0d1117;max-width:300px;white-space:normal;line-height:1.35" title="'+name+'"><span class="cexp" data-exp="'+i+'" title="Detalhes: por anúncio e por país" style="cursor:pointer;color:#0969da;font-weight:800;margin-right:6px;user-select:none;display:inline-block">▾</span>'+name+'<span class="crename" data-ren="'+i+'" title="Renomear campanha">✎</span></td>' +
+        /* 1 Campanha (nome + interruptor + status + histórico — tudo numa coluna) */
+        '<td style="max-width:340px"><div style="display:flex;align-items:flex-start;gap:9px"><input type="checkbox" class="cbo-sel" data-i="'+i+'" title="Selecionar campanha" style="width:16px;height:16px;accent-color:var(--ub-blue);margin-top:3px;cursor:pointer;flex:0 0 auto"><div style="min-width:0">'+
+          '<div style="font-weight:500;color:#0d1117;white-space:normal;line-height:1.3" title="'+name+'"><span class="cexp" data-exp="'+i+'" title="Detalhes: por anúncio e por país" style="cursor:pointer;color:#0969da;font-weight:800;margin-right:5px;user-select:none;display:inline-block">▾</span>'+name+'<span class="crename" data-ren="'+i+'" title="Renomear campanha">✎</span></div>'+
+          '<div style="margin-top:7px"><button class="cbo-sw '+(((camp.status||"").toUpperCase()==="ACTIVE")?"on":"")+'" id="ctgl_'+i+'" title="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar campanha no Meta":"Ativar campanha no Meta")+'" aria-label="'+(((camp.status||"").toUpperCase()==="ACTIVE")?"Pausar":"Ativar")+'"></button></div>'+
+          '<div style="margin-top:6px">'+stBadge+'</div>'+
+          (st.note?'<div style="font-size:10px;color:'+(st.noteCls==='ok'?'#57606a':(st.noteCls==='warn'?'#9a6700':'#cf222e'))+';margin-top:3px;white-space:nowrap">'+st.note+'</div>':'')+
+          '<div style="margin-top:5px"><span class="chist" data-hist="'+i+'" title="Ver histórico de alterações desta campanha">&#128220; Hist&oacute;rico</span></div>'+
+        '</div></div></td>' +
         /* 3 Conta */
         '<td style="font-size:12px;color:#57606a;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="'+acctName+'">'+acctName+'</td>' +
         /* 4 Últ. Atualiz. */
         '<td style="font-size:12px;color:var(--ub-mut)">---</td>' +
         /* 5 Orçamento */
         '<td style="font-size:12px">'+budgetCellHtml(camp, i, isDaily, lb)+'</td>' +
-        /* 6 Gasto Total */
-        '<td style="font-size:12px;color:#57606a">'+fmtUSD(spent)+'</td>' +
-        /* 7 Saldo */
-        '<td style="font-size:12px;color:#0969da;font-weight:500">'+(isDaily ? '---' : fmtUSD(remaining))+'</td>' +
         /* 8 Vendas */
         '<td style="font-size:12px;'+bl+'">'+(salesTipHtml?('<span class="sale-wrap">'+utmVendas+salesTipHtml+'</span>'):utmVendas)+'</td>' +
         /* 9 CPA */
@@ -3295,12 +3304,15 @@ html,body{background:var(--ub-bg)!important}
       /* Lápis -> renomear (não abre o card de detalhe). */
       var cren = document.querySelector('#cboTbody tr[data-cbo="'+i+'"] .crename');
       if (cren) cren.addEventListener('click', function(e){ e.stopPropagation(); renameCampaign(i); });
+      /* "Histórico" -> abre o histórico daquela campanha. */
+      var chi = document.querySelector('#cboTbody tr[data-cbo="'+i+'"] .chist');
+      if (chi) chi.addEventListener('click', function(e){ e.stopPropagation(); openCampHist(i); });
       /* Item 4 (mobile): toque na 1a coluna (campanha) abre o card de detalhes.
          So vincula em touch p/ nao mudar nada no desktop. */
       if (isTouchDevice()) {
         var tr = document.querySelector('#cboTbody tr[data-cbo="'+i+'"]');
         var nameCell = tr ? tr.cells[1] : null; /* célula da Campanha (0 = Status/checkbox) */
-        if (nameCell) nameCell.addEventListener('click', function(e) { if (e.target && (e.target.classList.contains('cbo-sel') || e.target.classList.contains('tgl-btn') || e.target.classList.contains('cbo-sw') || e.target.classList.contains('crename'))) return; openCboDetail(i); });
+        if (nameCell) nameCell.addEventListener('click', function(e) { if (e.target && (e.target.classList.contains('cbo-sel') || e.target.classList.contains('tgl-btn') || e.target.classList.contains('cbo-sw') || e.target.classList.contains('crename') || e.target.classList.contains('chist') || e.target.classList.contains('cexp'))) return; openCboDetail(i); });
       }
     });
     bindSaleTips();
@@ -3517,10 +3529,7 @@ html,body{background:var(--ub-bg)!important}
       '<td style="color:#0d1117">TOTAL ('+n+')</td>' +
       '<td></td>' +
       '<td></td>' +
-      '<td></td>' +
       '<td style="color:#0d1117">'+fmtUSD(T.lb)+'</td>' +
-      '<td style="color:#57606a">'+fmtUSD(T.spent)+'</td>' +
-      '<td style="color:#0969da">'+fmtUSD(T.rem)+'</td>' +
       '<td style="'+bl+';color:#0d1117">'+(hasC?T.sales:'---')+'</td>' +
       '<td>'+(hasC?tCPA:'---')+'</td>' +
       '<td style="color:#0d1117">'+fmtUSD(T.sp)+'</td>' +
@@ -3623,8 +3632,9 @@ html,body{background:var(--ub-bg)!important}
     if (novo == null) return;
     novo = novo.trim();
     if (!novo || novo === camp.name) return;
+    var oldName = camp.name || '';
     withTokenFallback(camp._tk, function(tk){ return postForm(camp.id, tk, { name: novo }); })
-      .then(function(){ camp.name = novo; if (typeof notifyOk === 'function') notifyOk('Campanha renomeada', novo); renderCBO(); })
+      .then(function(){ camp.name = novo; logActionHist(camp, 'Renomeada: "'+oldName+'" → "'+novo+'"', 'RENAME'); if (typeof notifyOk === 'function') notifyOk('Campanha renomeada', novo); renderCBO(); })
       .catch(function(e){ var msg = (e && e.message) ? e.message : String(e); if (typeof notifyErr === 'function') notifyErr('Erro ao renomear', msg); else alert('Erro ao renomear: ' + msg); });
   }
 
@@ -3879,7 +3889,7 @@ html,body{background:var(--ub-bg)!important}
     if (arrow) arrow.textContent = '▴';
     var det = document.createElement('tr');
     det.setAttribute('data-detfor', i); det.className = 'cbo-det-row';
-    det.innerHTML = '<td colspan="33" style="background:#f6f8fa;padding:10px 14px;border-bottom:2px solid #d0d7de">'
+    det.innerHTML = '<td colspan="30" style="background:#f6f8fa;padding:10px 14px;border-bottom:2px solid #d0d7de">'
       + '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">'
       +   '<button class="pill on" data-detmode="ad" data-i="'+i+'">Por anúncio</button>'
       +   '<button class="pill" data-detmode="country" data-i="'+i+'">Por país</button>'
@@ -4022,7 +4032,8 @@ html,body{background:var(--ub-bg)!important}
       + row('Lucro', (hasC && (fatNum > 0 || sp > 0)) ? '<span class="'+lucroCls+'">'+fmtUSD(lucroNum)+'</span>' : '---')
       + row('Anuncios', adsTxt)
       + row('Orc. vitalicio', fmtUSD(lb))
-      + row('Gasto total', fmtUSD(spent));
+      + row('Gasto total', fmtUSD(spent))
+      + row('Saldo', '<span style="color:#0969da;font-weight:600">'+fmtUSD(lb - spent)+'</span>');
 
     /* LIMITE DE LANCE (bid cap): aplica bid_amount (centavos USD) nos conjuntos ATIVOS. Estrategia BID da campanha. */
     var actSetsB = (camp._adsets || []).filter(function(s){ return (s.effective_status || '').toUpperCase() === 'ACTIVE'; });
@@ -4652,6 +4663,7 @@ html,body{background:var(--ub-bg)!important}
     withTokenFallback(camp._tk, function(tk){ return postForm(camp.id, tk, { status: novo }); })
       .then(function(r){
         camp._tk = r.tk; camp.status = novo; camp.effective_status = novo;
+        logActionHist(camp, (novo === 'ACTIVE' ? 'Ativada' : 'Pausada'), (novo === 'ACTIVE' ? 'ACTIVATE' : 'PAUSE'));
         /* renderCBO() reconstrói a linha com o switch no estado novo */
         renderCBO();
       })
@@ -5215,8 +5227,6 @@ html,body{background:var(--ub-bg)!important}
       if (curTab === 'resumo') { renderResumo(); if (!cboData.length && getTks() && getTks().length) { var sp=document.getElementById('spinResumo'); if(sp)sp.style.display='inline-block'; loadCBO(); } }
       else if (curTab === 'cbo') { if (!cboData.length && getTks() && getTks().length) { var spc=document.getElementById('spinCBO'); if(spc)spc.style.display='inline-block'; loadCBO(); } }
       else if (curTab === 'contas') { if (!allData.length) load(); }
-      else if (curTab === 'hist') { renderHist(); fetchRoboHist(); }
-      else if (curTab === 'orc') { renderOrc(); fetchRoboHist(); }
       else if (curTab === 'abo') { if (!aboData.length && !aboLoading) loadABO(); }
       else if (curTab === 'notif') { if (window._notifOpen) window._notifOpen(); }
     });
