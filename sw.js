@@ -1,5 +1,5 @@
 /* Scalefy — Service Worker (PWA + Web Push) */
-var SW_VERSION = 'scalefy-sw-2';
+var SW_VERSION = 'scalefy-sw-4';
 
 self.addEventListener('install', function(e){ self.skipWaiting(); });
 self.addEventListener('activate', function(e){ e.waitUntil(self.clients.claim()); });
@@ -16,10 +16,12 @@ self.addEventListener('push', function(event){
   var opts = {
     body: data.body || '',
     icon: 'icon-192.png',
-    badge: 'icon-192.png',
+    badge: 'badge-mono.png',   /* ícone pequeno da barra de status: silhueta $ (Android pinta de branco). */
     vibrate: [120, 60, 120, 60, 200],
     tag: data.tag || ('sale-' + Date.now()),
     renotify: true,
+    silent: false,        /* NÃO silenciosa: pede o som de notificação do SO (app fechado/bloqueado). */
+    requireInteraction: true, /* mantém na tela até o toque (não some sozinha). */
     data: data
   };
   /* mostra a notificação E avisa o app aberto (foreground) p/ tocar o som escolhido (cash.mp3/custom). */
