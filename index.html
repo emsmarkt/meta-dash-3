@@ -5565,7 +5565,7 @@ html,body{background:var(--ub-bg)!important}
     {i:30,k:'aplicar',l:'Aplicar'}
   ];
   var CBO_COL_KEY = 'md_cbo_hidden_cols';
-  var CBO_COL_DEFAULT = ['margem','roi','cpi','cpm','impr','id'];
+  var CBO_COL_DEFAULT = ['margem','roi','cpi','impr','id'];
   function getHiddenCols(){
     try { var raw = localStorage.getItem(CBO_COL_KEY); if (raw === null) return CBO_COL_DEFAULT.slice(); var a = JSON.parse(raw); return Array.isArray(a) ? a : CBO_COL_DEFAULT.slice(); }
     catch(e){ return CBO_COL_DEFAULT.slice(); }
