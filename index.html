@@ -518,11 +518,11 @@ html,body{background:var(--ub-bg)!important}
             <th title="IC = clique no botão da VSL (VTurb), somado por anúncio da campanha">IC</th>
             <th title="Custo por IC (gasto / IC da VTurb)">CPI</th>
             <th title="Conversão Checkout = Vendas / IC">CC</th>
-            <th title="CTR de link (%)">CTR</th>
+            <th title="Cliques no link (Meta)">Clique no Link</th>
             <th title="Custo por clique no link">CPC</th>
+            <th title="CTR de link (%)">CTR</th>
             <th title="Custo por mil impressões">CPM</th>
             <th>Impress&otilde;es</th>
-            <th title="Cliques no link">Cliques</th>
             <th title="ID da campanha">ID Campanha</th>
             <th title="Limite de lance (bid cap) dos conjuntos ativos — estrategia BID" style="border-left:1px solid var(--ub-line)">Limite lance</th>
             <th title="Limite de GASTO por dia: digite quanto rodar HOJE (teto = gasto atual + valor).">Limite gasto</th>
@@ -3260,17 +3260,17 @@ html,body{background:var(--ub-bg)!important}
         '<td style="font-size:12px">'+utmCPI+'</td>' +
         /* 18 CC */
         '<td style="font-size:12px">'+convTxt+'</td>' +
-        /* 19 CTR */
-        '<td style="font-size:12px">'+ctrTxt+'</td>' +
-        /* 20 CPC */
-        '<td style="font-size:12px">'+cpc+'</td>' +
-        /* 21 CPM */
-        '<td style="font-size:12px">'+cpmTxt+'</td>' +
-        /* 22 Impressões */
-        '<td style="font-size:12px">'+imprTxt+'</td>' +
-        /* 23 Cliques */
+        /* 16 Clique no Link */
         '<td style="font-size:12px">'+clicksNum+'</td>' +
-        /* ID Campanha */
+        /* 17 CPC */
+        '<td style="font-size:12px">'+cpc+'</td>' +
+        /* 18 CTR */
+        '<td style="font-size:12px">'+ctrTxt+'</td>' +
+        /* 19 CPM */
+        '<td style="font-size:12px">'+cpmTxt+'</td>' +
+        /* 20 Impressões */
+        '<td style="font-size:12px">'+imprTxt+'</td>' +
+        /* 21 ID Campanha */
         '<td style="font-size:12px">'+idTxt+'</td>' +
         /* 28 Limite lance (bid) */
         '<td style="'+bl+'">'+bidCellHtml(camp, i)+'</td>' +
@@ -3565,11 +3565,11 @@ html,body{background:var(--ub-bg)!important}
       '<td>'+(hasC?T.ics:'---')+'</td>' +
       '<td>'+(hasC?tCPI:'---')+'</td>' +
       '<td>'+(hasC?tPct(T.sales,T.ics):'---')+'</td>' +
-      '<td>'+(T.impr>0?tCtr.toFixed(2).replace('.',',')+'%':'---')+'</td>' +
+      '<td>'+(T.lclk>0?T.lclk.toLocaleString('pt-BR'):'---')+'</td>' +
       '<td>'+tCPC+'</td>' +
+      '<td>'+(T.impr>0?tCtr.toFixed(2).replace('.',',')+'%':'---')+'</td>' +
       '<td>'+tCpm+'</td>' +
       '<td>'+(T.impr>0?T.impr.toLocaleString('pt-BR'):'---')+'</td>' +
-      '<td>'+(T.lclk>0?T.lclk.toLocaleString('pt-BR'):'---')+'</td>' +
       '<td></td>' +
       '<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>' +
       '</tr>';
@@ -5548,11 +5548,11 @@ html,body{background:var(--ub-bg)!important}
     {i:13,k:'ic',l:'IC'},
     {i:14,k:'cpi',l:'CPI'},
     {i:15,k:'cc',l:'CC'},
-    {i:16,k:'ctr',l:'CTR'},
+    {i:16,k:'cliquelink',l:'Clique no Link'},
     {i:17,k:'cpc',l:'CPC'},
-    {i:18,k:'cpm',l:'CPM'},
-    {i:19,k:'impr',l:'Impressões'},
-    {i:20,k:'cliques',l:'Cliques'},
+    {i:18,k:'ctr',l:'CTR'},
+    {i:19,k:'cpm',l:'CPM'},
+    {i:20,k:'impr',l:'Impressões'},
     {i:21,k:'id',l:'ID Campanha'},
     {i:22,k:'bid',l:'Limite lance'},
     {i:23,k:'limgasto',l:'Limite gasto'},
@@ -5565,7 +5565,7 @@ html,body{background:var(--ub-bg)!important}
     {i:30,k:'aplicar',l:'Aplicar'}
   ];
   var CBO_COL_KEY = 'md_cbo_hidden_cols';
-  var CBO_COL_DEFAULT = ['margem','roi','cpi','cpm','impr','cliques','id'];
+  var CBO_COL_DEFAULT = ['margem','roi','cpi','cpm','impr','id'];
   function getHiddenCols(){
     try { var raw = localStorage.getItem(CBO_COL_KEY); if (raw === null) return CBO_COL_DEFAULT.slice(); var a = JSON.parse(raw); return Array.isArray(a) ? a : CBO_COL_DEFAULT.slice(); }
     catch(e){ return CBO_COL_DEFAULT.slice(); }
