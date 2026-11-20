@@ -515,7 +515,7 @@ html,body{background:var(--ub-bg)!important}
             <th style="cursor:pointer;user-select:none" data-sort="roas" id="thRoas">ROAS &#8645;</th>
             <th title="Lucro / Faturamento">Margem</th>
             <th title="Retorno sobre investimento">ROI</th>
-            <th title="IC = clique no botão da VSL (VTurb), somado por anúncio da campanha">IC</th>
+            <th title="IC = InitiateCheckout direto do pixel do Meta (actions). Fallback: clique no botão da VSL (VTurb)">IC</th>
             <th title="Custo por IC (gasto / IC da VTurb)">CPI</th>
             <th title="Conversão Checkout = Vendas / IC">CC</th>
             <th title="Cliques no link (Meta)">Clique no Link</th>
@@ -1542,10 +1542,13 @@ html,body{background:var(--ub-bg)!important}
       camps.forEach(function(c){
         var v = by[String(c.id)] || null;
         var sales = v ? (v.sales||0) : 0, rev = v ? (v.revenue||0) : 0;
-        /* IC = soma dos cliques no botão (VTurb) dos anúncios desta campanha. Associa AD -> campanha pelo _adIds. */
+        var icHw = v ? (v.ic||0) : 0;   /* IC da HW via postback S2S (/pbsales) — fonte preferida */
+        var icqHw = v ? (v.icq||0) : 0; /* IC QUALIFICADO da HW (postback ev=icq) */
+        /* IC VTurb (fallback): cliques no botão da VSL dos anúncios desta campanha. Associa AD -> campanha pelo _adIds. */
         var icVt = 0, ids = c._adIds || [];
         for (var k=0; k<ids.length; k++){ var a = byAd[ids[k]]; if (a && a.clicks) icVt += a.clicks; }
-        if (sales || rev || icVt) c._conv = { sales: sales, ic: icVt, revenue: rev, src: 'pb', icSrc: icVt>0?'vturb':null };
+        var ic = icHw > 0 ? icHw : icVt; /* prefere HW; sem HW, usa VTurb */
+        if (sales || rev || ic) c._conv = { sales: sales, ic: ic, icq: icqHw, revenue: rev, src: 'pb', icSrc: icHw>0?'hw':(icVt>0?'vturb':null) };
       });
     }).catch(function(){});
   }
@@ -1990,10 +1993,10 @@ html,body{background:var(--ub-bg)!important}
          DIÁRIO (time_range do dia), que é completo e bate com o Gerenciador de Anúncios da Meta. Pra contas
          em São Paulo (-3) já é o dia BR exato; pras contas US é o dia da conta (diferença só na virada). */
       var useHourly = false; /* era: !!(singleDay && offBr) */
-      var lifeUrl = API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend'+(isLifetime?',clicks,inline_link_clicks,cost_per_inline_link_click,inline_link_click_ctr,impressions,frequency':'')+'&time_range='+totalRange+'&limit=500&access_token='+tk;
+      var lifeUrl = API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend'+(isLifetime?',clicks,inline_link_clicks,cost_per_inline_link_click,inline_link_click_ctr,impressions,frequency,actions':'')+'&time_range='+totalRange+'&limit=500&access_token='+tk;
       var periodUrl = useHourly
         ? (API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend,clicks,inline_link_clicks,impressions&time_increment=1&breakdowns=hourly_stats_aggregated_by_advertiser_time_zone&time_range='+hourlyWide+'&limit=500&access_token='+tk)
-        : (API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend,clicks,inline_link_clicks,cost_per_inline_link_click,inline_link_click_ctr,impressions,frequency&'+periodParam+'&limit=500&access_token='+tk);
+        : (API+'/'+acct+'/insights?level=campaign&fields=campaign_id,spend,clicks,inline_link_clicks,cost_per_inline_link_click,inline_link_click_ctr,impressions,frequency,actions&'+periodParam+'&limit=500&access_token='+tk);
       /* PERF: sem `insights.date_preset(maximum){spend}` por conjunto — o gasto vitalicio POR conjunto (s._life)
          nao era usado em lugar nenhum (o hasCap usa lifetime_spend_cap + gasto da CAMPANHA). Tirar isso deixa a
          busca de conjuntos MUITO mais leve/rapida. */
@@ -3083,7 +3086,9 @@ html,body{background:var(--ub-bg)!important}
       var cpc = camp._cpc > 0 ? fmtUSD(camp._cpc) : '---';
       var sp = camp._periodSpend || 0, clk = camp._clicks || 0;
       var sales = (hasC && camp._conv) ? (camp._conv.sales||0) : 0;
-      var ics = (hasC && camp._conv) ? (camp._conv.ic||0) : 0;
+      /* IC = InitiateCheckout DIRETO do pixel do Meta (camp._icMeta, do campo actions). Fonte autoritativa.
+         Só cai pro VTurb (_conv.ic) se o Meta não tiver IC (pixel sem o evento InitiateCheckout). */
+      var ics = (camp._icMeta||0) > 0 ? (camp._icMeta||0) : ((hasC && camp._conv) ? (camp._conv.ic||0) : 0);
       var fatNum = campFat(camp), roasNum = sp > 0 ? fatNum/sp : 0, lucroNum = fatNum - sp;
       var pct = function(n,d){ return (d>0) ? (n/d*100).toFixed(1).replace('.',',')+'%' : '---'; };
       /* ── Tooltip estilizado com a HORA de cada venda (fuso BR) ──
